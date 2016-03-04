@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tranparent_black">#80000000</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="darker_blue">#ff212c66</color>
+    <color name="line_background">#ffcccccc</color>
+    <color name="stroke_color">#cccccc</color>
+    <color name="transparent_white">#80FFFFFF</color>
+    <color name="transparent_blue">#800000ff</color>
+    <color name="selected_checkbox_color">#CECECE</color>
+    <color name="strokeColor">#CECECE</color>
+    <color name="blue_grey">#607D8B</color>
+    <color name="textColor">#263242</color>
+    <color name="actionbar_background">#263242</color>
+    <color name="orange">#e66437</color>
+    <color name="gaadi_blue">#263242</color>
+    <color name="hintStrokeColor">#80CECECE</color>
+    <color name="green">#ee00FF00</color>
+    <color name="toolbar_color">#DC592B</color>
+    <color name="hintColor">#9E9E9E</color>
+    <color name="done_text_color_normal">#ff333333</color>
+    <color name="login_button_background">#e86335</color>
+    <color name="done_text_color_disabled">#ffcccccc</color>
+    <color name="date_picker_text_normal">#ff999999</color>
+    <color name="calendar_header">#ff999999</color>
+    <color name="date_picker_view_animator">#fff2f2f2</color>
+    <color name="light_green">#8BC34A</color>
+    <color name="action_bar_title_color">@color/white</color>
+</resources>
