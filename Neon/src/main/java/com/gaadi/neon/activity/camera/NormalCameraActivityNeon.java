@@ -1,16 +1,5 @@
 package com.gaadi.neon.activity.camera;
 
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.enumerations.GalleryType;
@@ -29,6 +18,17 @@ import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.PermissionType;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NormalCameraActivityLayoutBinding;
+
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +133,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
         } else if (id == R.id.buttonGallery) {
             try {
-                IGalleryParam galleryParam = NeonImagesHandler.getSingleonInstance().getGalleryParam();
+                IGalleryParam galleryParam = NeonImagesHandler.getSingletonInstance().getGalleryParam();
                 if (galleryParam == null) {
                     galleryParam = new IGalleryParam() {
                         @Override
@@ -163,17 +163,17 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
                         @Override
                         public int getNumberOfPhotos() {
-                            return NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos();
+                            return NeonImagesHandler.getSingletonInstance().getCameraParam().getNumberOfPhotos();
                         }
 
                         @Override
                         public boolean getTagEnabled() {
-                            return NeonImagesHandler.getSingleonInstance().getCameraParam().getTagEnabled();
+                            return NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled();
                         }
 
                         @Override
                         public List<ImageTagModel> getImageTagsModel() {
-                            return NeonImagesHandler.getSingleonInstance().getCameraParam().getImageTagsModel();
+                            return NeonImagesHandler.getSingletonInstance().getCameraParam().getImageTagsModel();
                         }
 
                         @Override
