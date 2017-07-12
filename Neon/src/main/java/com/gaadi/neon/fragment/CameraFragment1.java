@@ -285,9 +285,18 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         super.onResume();
         if(!fromCreate){
             try {
-                CameraFragment1 fragment = new CameraFragment1();
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            CameraFragment1 fragment = new CameraFragment1();
+                            FragmentManager manager = getActivity().getSupportFragmentManager();
+                            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 return;
             } catch (Exception e) {
                 e.printStackTrace();

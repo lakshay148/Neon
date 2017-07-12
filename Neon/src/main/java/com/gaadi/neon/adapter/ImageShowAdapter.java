@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
+import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
@@ -21,31 +22,36 @@ import com.scanlibrary.R;
  * @version 1.0
  * @since 2/2/17
  */
-public class ImageShowAdapter extends BaseAdapter {
+public class ImageShowAdapter extends BaseDynamicGridAdapter {
 
     private Context context;
 
-    public ImageShowAdapter(Context activity) {
-        context = activity;
+    public ImageShowAdapter(Context context) {
+        super(context, NeonImagesHandler.getSingletonInstance().getImagesCollection(), 2);
+        this.context = context;
     }
 
     @Override
+    public int getCount() {
+        if(NeonImagesHandler.getSingletonInstance().getImagesCollection() != null) {
+            return NeonImagesHandler.getSingletonInstance().getImagesCollection().size();
+        }
+        return 0;
+    }
+
+   /* @Override
     public int getCount() {
         if(NeonImagesHandler.getSingleonInstance().getImagesCollection() != null) {
             return NeonImagesHandler.getSingleonInstance().getImagesCollection().size();
         }
         return 0;
-    }
+    }*/
 
-    @Override
+   /* @Override
     public Object getItem(int position) {
         return NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position);
-    }
+    }*/
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -61,7 +67,7 @@ public class ImageShowAdapter extends BaseAdapter {
             holder = (PhotosHolder) convertView.getTag();
         }
 
-        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
+        if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
             holder.tvProfile.setVisibility(View.GONE);
         } else {
             holder.tvProfile.setVisibility(View.VISIBLE);
@@ -89,7 +95,7 @@ public class ImageShowAdapter extends BaseAdapter {
             }
         });
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+       /* convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent viewPagerIntent = new Intent(context,ImageReviewActivity.class);
@@ -98,6 +104,14 @@ public class ImageShowAdapter extends BaseAdapter {
             }
         });
 
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(context,"Long Pressed",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+*/
         Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
                 .crossFade()
                 .placeholder(R.drawable.default_placeholder)

@@ -1,5 +1,22 @@
 package com.gaadi.neon.activity.camera;
 
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.enumerations.GalleryType;
@@ -94,6 +111,12 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                         });
 
                                     } else {
+                                        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                                            finish();
+                                        }else{
+                                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(NormalCameraActivityNeon.this,
+                                                    ResponseCode.Camera_Permission_Error);
+                                        }
                                         Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -102,6 +125,12 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                             manifestPermission.printStackTrace();
                         }
                     } else {
+                        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                            finish();
+                        }else{
+                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(NormalCameraActivityNeon.this,
+                                    ResponseCode.Write_Permission_Error);
+                        }
                         Toast.makeText(NormalCameraActivityNeon.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -367,10 +396,18 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if (cameraParams.getTagEnabled()) {
             fileInfo.setFileTag(tagModels.get(currentTag));
         }
+        if(binder.imageHolderView.getVisibility() != View.VISIBLE){
+            binder.imageHolderView.setVisibility(View.VISIBLE);
+        }
         NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()==null) {
+            ImageView image = new ImageView(this);
+            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
+            image.setImageBitmap(thumbnail);
+            //image.setImageDrawable(Drawable.createFromPath(filePath));
+            binder.imageHolderView.addView(image);
 
 
-        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()==null){
             if (cameraParams.getTagEnabled()) {
                 ImageTagModel imageTagModel = tagModels.get(currentTag);
                 if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
@@ -378,8 +415,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 }
             }
         }
-    }
 
+
+    }
 
     @Override
     public void onNextTag() {
@@ -392,4 +430,5 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             }
         }
     }
+
 }
