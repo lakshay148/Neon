@@ -123,10 +123,10 @@ public class PhotosLibrary {
     }
 
     private static void startNeutralActivity(Context activity, PhotosMode photosMode) {
-        NeonImagesHandler.getSingleonInstance().setNeutralEnabled(true);
+        NeonImagesHandler.getSingletonInstance().setNeutralEnabled(true);
 
         INeutralParam neutralParamParams = (INeutralParam) photosMode.getParams();
-        NeonImagesHandler.getSingleonInstance().setNeutralParam(neutralParamParams);
+        NeonImagesHandler.getSingletonInstance().setNeutralParam(neutralParamParams);
 
         Intent neutralIntent = new Intent(activity, NeonNeutralActivity.class);
         activity.startActivity(neutralIntent);

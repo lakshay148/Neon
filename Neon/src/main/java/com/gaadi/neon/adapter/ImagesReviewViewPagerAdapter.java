@@ -47,14 +47,14 @@ public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
             fragmentList.clear();
         else
             fragmentList=new ArrayList<>();
-        for (int i = 0; i < NeonImagesHandler.getSingleonInstance().getImagesCollection().size(); i++) {
-            fragmentList.add(ImageReviewViewPagerFragment.create(i, NeonImagesHandler.getSingleonInstance().getImagesCollection().get(i)));
+        for (int i = 0; i < NeonImagesHandler.getSingletonInstance().getImagesCollection().size(); i++) {
+            fragmentList.add(ImageReviewViewPagerFragment.create(i, NeonImagesHandler.getSingletonInstance().getImagesCollection().get(i)));
         }
     }
 
     public void setPagerItems() {
         if (fragmentList != null)
-            for (int i = 0; i < NeonImagesHandler.getSingleonInstance().getImagesCollection().size(); i++) {
+            for (int i = 0; i < NeonImagesHandler.getSingletonInstance().getImagesCollection().size(); i++) {
                 mFragmentManager.beginTransaction().remove(fragmentList.get(i)).commit();
             }
         updatePagerItems();

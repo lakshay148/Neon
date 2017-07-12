@@ -46,7 +46,7 @@ public class NeonImagesHandler {
 
     @Deprecated
     public synchronized static NeonImagesHandler getSingleonInstance() {
-       return getSingletonInstance();
+        return getSingletonInstance();
     }
 
     public synchronized static NeonImagesHandler getSingletonInstance() {
@@ -70,12 +70,12 @@ public class NeonImagesHandler {
 
     public int getNumberOfPhotosCollected(ImageTagModel imageTagModel) {
         int count = 0;
-        if(imagesCollection != null && imagesCollection.size()>0){
-            for(FileInfo fileInfo : imagesCollection){
-                if(fileInfo.getFileTag() == null){
+        if (imagesCollection != null && imagesCollection.size() > 0) {
+            for (FileInfo fileInfo : imagesCollection) {
+                if (fileInfo.getFileTag() == null) {
                     continue;
                 }
-                if(fileInfo.getFileTag().getTagId().equals(imageTagModel.getTagId())){
+                if (fileInfo.getFileTag().getTagId().equals(imageTagModel.getTagId())) {
                     count++;
                 }
             }
@@ -187,22 +187,22 @@ public class NeonImagesHandler {
             imagesCollection = new ArrayList<>();
         }
 
-        if(!getGenericParam().getTagEnabled()){
-            if(getGenericParam().getNumberOfPhotos() > 0 &&
+        if (!getGenericParam().getTagEnabled()) {
+            if (getGenericParam().getNumberOfPhotos() > 0 &&
                     getImagesCollection() != null &&
-                    getGenericParam().getNumberOfPhotos() == getImagesCollection().size()){
+                    getGenericParam().getNumberOfPhotos() == getImagesCollection().size()) {
                 Toast.makeText(context, context.getString(R.string.max_count_error, getGenericParam().getNumberOfPhotos()), Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }else{
+        } else {
             ImageTagModel imageTagModel = fileInfo.getFileTag();
-            if(imageTagModel != null && imageTagModel.getNumberOfPhotos() > 0 &&
-                    getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()){
+            if (imageTagModel != null && imageTagModel.getNumberOfPhotos() > 0 &&
+                    getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
                 Toast.makeText(context, context.getString(R.string.max_tag_count_error, imageTagModel.getNumberOfPhotos()) + imageTagModel.getTagName(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
-        imagesCollection.add(0, fileInfo);
+        imagesCollection.add(fileInfo);
         return true;
     }
 
@@ -252,18 +252,18 @@ public class NeonImagesHandler {
         NeonResponse neonResponse = new NeonResponse();
         neonResponse.setRequestCode(getRequestCode());
         neonResponse.setResponseCode(responseCode);
-        neonResponse.setImageCollection(NeonImagesHandler.getSingleonInstance().getImagesCollection());
-        neonResponse.setImageTagsCollection(NeonImagesHandler.getSingleonInstance().getFileHashMap());
-        NeonImagesHandler.getSingleonInstance().getImageResultListener().imageCollection(neonResponse);
-        NeonImagesHandler.getSingleonInstance().scheduleSingletonClearance();
+        neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
+        neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
+        NeonImagesHandler.getSingletonInstance().getImageResultListener().imageCollection(neonResponse);
+        NeonImagesHandler.getSingletonInstance().scheduleSingletonClearance();
         activity.finish();
     }
 
     public void showBackOperationAlertIfNeeded(final Activity activity) {
-        if(validateNeonExit(null)){
+        if (validateNeonExit(null)) {
             sendImageCollectionAndFinish(activity, ResponseCode.Back);
-        }else{
-            if(NeonImagesHandler.getSingleonInstance().getLibraryMode() == LibraryMode.Restrict) {
+        } else {
+            if (NeonImagesHandler.getSingleonInstance().getLibraryMode() == LibraryMode.Restrict) {
                 new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
                         .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -277,7 +277,7 @@ public class NeonImagesHandler {
                         dialog.dismiss();
                     }
                 }).show();
-            }else{
+            } else {
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
         }
@@ -293,7 +293,7 @@ public class NeonImagesHandler {
         if (fileInfos != null && fileInfos.size() > 0) {
             for (int i = 0; i < fileInfos.size(); i++) {
                 if (fileInfos.get(i).getFileTag() == null) {
-                    if(activity != null) {
+                    if (activity != null) {
                         Toast.makeText(activity, "Set tag for all images", Toast.LENGTH_SHORT).show();
                     }
                     return false;
@@ -307,7 +307,7 @@ public class NeonImagesHandler {
                 continue;
             }
             if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
-                if(activity != null) {
+                if (activity != null) {
                     Toast.makeText(activity, imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
                 }
                 return false;

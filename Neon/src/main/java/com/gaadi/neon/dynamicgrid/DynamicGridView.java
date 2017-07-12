@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
+import com.gaadi.neon.fragment.ImageShowFragment;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
@@ -986,6 +987,8 @@ public class DynamicGridView extends GridView {
             mHoverCell.draw(canvas);
         }
     }
+
+
 
     private interface SwitchCellAnimator {
         void animateSwitchCell(final int originalPosition, final int targetPosition);

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
@@ -185,6 +186,12 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
                         ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(GridFoldersActivity.this, getImageBuckets());
                         binder.gvFolders.setAdapter(adapter);
                     } else {
+                        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                            finish();
+                        }else{
+                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(GridFoldersActivity.this,
+                                    ResponseCode.Write_Permission_Error);
+                        }
                         Toast.makeText(GridFoldersActivity.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }
                 }

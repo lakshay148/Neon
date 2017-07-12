@@ -75,6 +75,7 @@
             android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/belowLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -87,13 +88,15 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp">
 
-                <ImageView
+                <TextView
                     android:id="@+id/buttonDone"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Done"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_camera_done"
                     android:visibility="visible"
                     android:onClick="@{handlers::onClick}"/>
 
@@ -111,23 +114,23 @@
 
             </RelativeLayout>
 
-            <HorizontalScrollView
-                android:id="@+id/hsvPreview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/imageHolderView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@color/tranparent_black"
-                    android:minWidth="600dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                </LinearLayout>
-            </HorizontalScrollView>
         </LinearLayout>
+
+
+        <HorizontalScrollView
+            android:layout_below="@+id/rlTags"
+            android:id="@+id/hsvPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/imageHolderView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/tranparent_black"
+                android:orientation="horizontal"
+                android:visibility="visible"/>
+        </HorizontalScrollView>
 
 
     </RelativeLayout>

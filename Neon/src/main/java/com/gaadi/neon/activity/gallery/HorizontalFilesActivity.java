@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
@@ -211,6 +212,12 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
                             onClick(fileInfos.get(0));
                         }
                     } else {
+                        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                            finish();
+                        }else{
+                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(HorizontalFilesActivity.this,
+                                    ResponseCode.Write_Permission_Error);
+                        }
                         Toast.makeText(HorizontalFilesActivity.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }
                 }

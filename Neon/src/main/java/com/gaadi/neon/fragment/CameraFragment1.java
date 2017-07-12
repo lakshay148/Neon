@@ -284,9 +284,18 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         super.onResume();
         if(!fromCreate){
             try {
-                CameraFragment1 fragment = new CameraFragment1();
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            CameraFragment1 fragment = new CameraFragment1();
+                            FragmentManager manager = getActivity().getSupportFragmentManager();
+                            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -777,6 +786,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         // Notice that width and height are reversed
+                        if (bm.getHeight() < bm.getWidth()) {
+                            bm = rotateBitmap(bm, 90);
+                        }
+
                         Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
                         int w = scaled.getWidth();
                         int h = scaled.getHeight();
@@ -862,5 +875,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
             readyToTakePicture = true;
         }
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }
