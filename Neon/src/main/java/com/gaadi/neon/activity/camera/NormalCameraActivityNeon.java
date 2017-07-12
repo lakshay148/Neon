@@ -361,7 +361,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             findViewById(R.id.rlTags).setVisibility(View.GONE);
         }
 
-        buttonGallery.setVisibility(cameraParams.cameraToGallerySwitchEnabled() ? View.VISIBLE : View.GONE);
+        buttonGallery.setVisibility(cameraParams.cameraToGallerySwitchEnabled() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void initialiazeCurrentTag() {
