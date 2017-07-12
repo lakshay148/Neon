@@ -1,8 +1,11 @@
 package com.gaadi.neon.activity;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.gaadi.neon.adapter.ImagesReviewViewPagerAdapter;
+import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
 import com.gaadi.neon.model.NeonResponse;
@@ -110,7 +114,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
             NeonImagesHandler.getSingletonInstance().removeFromCollection(event.getPosition());
             mPagerAdapter.setPagerItems();
             if (NeonImagesHandler.getSingletonInstance().getImagesCollection().size() == 0) {
-                onBackPressed();
+                super.onBackPressed();
             }
             setArrowButton(mPager.getCurrentItem());
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_ROTATE) {
@@ -161,11 +165,24 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         return super.onCreateOptionsMenu(menu);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            NeonImagesHandler.getSingletonInstance().removeFromCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
+        }
+        super.onBackPressed();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+
+                if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+                    NeonImagesHandler.getSingletonInstance().removeFromCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
+                }
+                super.onBackPressed();
                 return true;
 
         }
@@ -183,7 +200,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
                 if(NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener()!=null)
                 NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener().onNextTag();
             }
-            onBackPressed();
+            super.onBackPressed();
             return true;
         }
         if (item.getItemId() == R.id.menu_delete) {
@@ -191,9 +208,9 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
             i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
             setResult(RESULT_OK, i);*/
             if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-                NeonImagesHandler.getSingletonInstance().removeFromCollection( NeonImagesHandler.getSingletonInstance().getImagesCollection().get(0));
+                NeonImagesHandler.getSingletonInstance().removeFromCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
             }
-            onBackPressed();
+            super.onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

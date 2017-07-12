@@ -312,7 +312,8 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
             }, new LivePhotosListener() {
                 @Override
                 public void onLivePhotoCollected(NeonResponse neonResponse) {
-                    Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(0).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
+                    int index=neonResponse.getImageCollection().size();
+                    Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(index-1).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
 
                 }
             });

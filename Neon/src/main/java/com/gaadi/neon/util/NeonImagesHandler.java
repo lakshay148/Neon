@@ -42,6 +42,7 @@ public class NeonImagesHandler {
     private OnImageCollectionListener imageResultListener;
     private LivePhotosListener livePhotosListener;
     private LivePhotoNextTagListener livePhotoNextTagListener;
+    private String currentTag="";
 
     private LibraryMode libraryMode;
     private int requestCode;
@@ -111,6 +112,15 @@ public class NeonImagesHandler {
 
     public void setLivePhotoNextTagListener(LivePhotoNextTagListener livePhotoNextTagListener) {
         this.livePhotoNextTagListener = livePhotoNextTagListener;
+    }
+
+
+    public String getCurrentTag() {
+        return currentTag;
+    }
+
+    public void setCurrentTag(String currentTag) {
+        this.currentTag = currentTag;
     }
 
 
@@ -310,7 +320,7 @@ public class NeonImagesHandler {
 
     public void showBackOperationAlertIfNeededLive(final Activity activity) {
             if(NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
-                new AlertDialog.Builder(activity).setTitle("You can not exit in live photo.")
+                new AlertDialog.Builder(activity).setTitle("Please upload "+NeonImagesHandler.getSingletonInstance().getCurrentTag()+" Photo")
                         .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

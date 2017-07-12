@@ -873,7 +873,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                         @Override
                         public void run() {
                             Intent viewPagerIntent = new Intent(context,ImageReviewActivity.class);
-                            viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,0/*NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1*/);
+                            viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
                             startActivity(viewPagerIntent);
                         }
                     },200);

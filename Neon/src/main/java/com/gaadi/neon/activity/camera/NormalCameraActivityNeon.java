@@ -149,6 +149,13 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         buttonGallery = binder.buttonGallery;
         tagsLayout = binder.rlTags;
         binder.setHandlers(this);
+
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            tvNext.setVisibility(View.INVISIBLE);
+        }
+        else {
+            tvNext.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onClick(View v) {
@@ -324,12 +331,22 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     public void setTag(ImageTagModel imageTagModel, boolean rightToLeft) {
         tvTag.setText(imageTagModel.isMandatory() ? "*" + imageTagModel.getTagName() : imageTagModel.getTagName());
+
         if (rightToLeft) {
             AnimationUtils.translateOnXAxis(tvTag, 200, 0);
         } else {
             AnimationUtils.translateOnXAxis(tvTag, -200, 0);
         }
 
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            if(NeonImagesHandler.getSingletonInstance().getImagesCollection()!=null && currentTag<NeonImagesHandler.getSingletonInstance().getImagesCollection().size()){
+                tvNext.setVisibility(View.VISIBLE);
+            }
+            else {
+                tvNext.setVisibility(View.INVISIBLE);
+            }
+            NeonImagesHandler.getSingletonInstance().setCurrentTag(tvTag.getText().toString().trim());
+        }
     }
 
     private void customize() {
