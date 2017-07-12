@@ -15,6 +15,7 @@ import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
+import com.gaadi.neon.interfaces.LivePhotosListener;
 import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
@@ -292,6 +293,30 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 }
             }),this);
         } catch (NeonException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void livePhotoClick(View view){
+
+        try {
+            ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+            for (int i = 0; i < numberOfTags; i++) {
+                list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
+            }
+            PhotosLibrary.collectLivePhotos(this, list, new OnImageCollectionListener() {
+                @Override
+                public void imageCollection(NeonResponse neonResponse) {
+
+                }
+            }, new LivePhotosListener() {
+                @Override
+                public void onLivePhotoCollected(NeonResponse neonResponse) {
+                    Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(0).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }catch (NeonException e){
             e.printStackTrace();
         }
     }

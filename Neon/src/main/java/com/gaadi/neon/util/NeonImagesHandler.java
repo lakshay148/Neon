@@ -14,6 +14,8 @@ import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
 import com.gaadi.neon.interfaces.IParam;
+import com.gaadi.neon.interfaces.LivePhotoNextTagListener;
+import com.gaadi.neon.interfaces.LivePhotosListener;
 import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
@@ -38,6 +40,9 @@ public class NeonImagesHandler {
     private boolean neutralEnabled;
     private INeutralParam neutralParam;
     private OnImageCollectionListener imageResultListener;
+    private LivePhotosListener livePhotosListener;
+    private LivePhotoNextTagListener livePhotoNextTagListener;
+
     private LibraryMode libraryMode;
     private int requestCode;
 
@@ -90,6 +95,24 @@ public class NeonImagesHandler {
     public void setImageResultListener(OnImageCollectionListener imageResultListener) {
         this.imageResultListener = imageResultListener;
     }
+
+
+    public LivePhotosListener getLivePhotosListener() {
+        return livePhotosListener;
+    }
+
+    public void setLivePhotosListener(LivePhotosListener livePhotosListener) {
+        this.livePhotosListener = livePhotosListener;
+    }
+
+    public LivePhotoNextTagListener getLivePhotoNextTagListener() {
+        return livePhotoNextTagListener;
+    }
+
+    public void setLivePhotoNextTagListener(LivePhotoNextTagListener livePhotoNextTagListener) {
+        this.livePhotoNextTagListener = livePhotoNextTagListener;
+    }
+
 
     public IParam getGenericParam() {
         if (galleryParam != null)
@@ -284,6 +307,19 @@ public class NeonImagesHandler {
 
 
     }
+
+    public void showBackOperationAlertIfNeededLive(final Activity activity) {
+            if(NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
+                new AlertDialog.Builder(activity).setTitle("You can not exit in live photo.")
+                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+    }
+
 
     public boolean validateNeonExit(Activity activity) {
         if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {

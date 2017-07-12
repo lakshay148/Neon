@@ -43,6 +43,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
@@ -777,6 +778,12 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         // Notice that width and height are reversed
+
+                        if (bm.getHeight() < bm.getWidth())
+                        {
+                            bm = rotateBitmap(bm, 90);
+                        }
+
                         Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
                         int w = scaled.getWidth();
                         int h = scaled.getHeight();
@@ -851,7 +858,21 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 }
                 mCamera.startPreview();*/
 
+                // Modify for live Photos
+                if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+                    mCameraPreview.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent viewPagerIntent = new Intent(context,ImageReviewActivity.class);
+                            viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,0/*NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1*/);
+                            startActivity(viewPagerIntent);
+                        }
+                    },200);
+
+                }
+
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
+
                 // readyToTakePicture = true;
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
@@ -862,5 +883,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
             readyToTakePicture = true;
         }
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }

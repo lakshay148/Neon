@@ -118,17 +118,22 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
                 .inflate(R.layout.fragment_image_review_viewpager, container, false);
 
         fileEditLayout = (RelativeLayout) rootView.findViewById(R.id.header_options_imageereview);
+
+
+
         deleteBtn = (ImageView) rootView.findViewById(R.id.imagereview_deletebtn);
         cropBtn = (ImageView) rootView.findViewById(R.id.imagereview_cropbtn);
         rotateBtn = (ImageView) rootView.findViewById(R.id.imagereview_rotatebtn);
         txtVwTagSpinner = (TextView) rootView.findViewById(R.id.imagereview_tag_spinner);
         draweeView = (ImageView) rootView.findViewById(R.id.imagereview_imageview);
         tagLayout = (LinearLayout) rootView.findViewById(R.id.footer_layout_imagereview_fragment);
+
         if (NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
             tagLayout.setVisibility(View.VISIBLE);
         } else {
             tagLayout.setVisibility(View.GONE);
         }
+
         deleteBtn.setOnClickListener(this);
         rotateBtn.setOnClickListener(this);
         cropBtn.setOnClickListener(this);
@@ -140,6 +145,12 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         } else {
             fileEditLayout.setVisibility(View.VISIBLE);
         }
+
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            fileEditLayout.setVisibility(View.GONE);
+            tagLayout.setVisibility(View.GONE);
+        }
+
         return rootView;
     }
 

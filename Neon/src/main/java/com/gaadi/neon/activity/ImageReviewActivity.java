@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.gaadi.neon.adapter.ImagesReviewViewPagerAdapter;
 import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
+import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
@@ -56,7 +57,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         if (position == 0) {
             viewPagerLeftBtn.setVisibility(View.GONE);
         }
-        if (position == NeonImagesHandler.getSingleonInstance().getImagesCollection().size() - 1) {
+        if (position == NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1) {
             viewPagerRightBtn.setVisibility(View.GONE);
         }
         mPagerAdapter = new ImagesReviewViewPagerAdapter(getSupportFragmentManager());
@@ -100,9 +101,9 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         boolean isViewDirty = false;
         if (event.getImageEventType() == ImageEditEvent.EVENT_DELETE) {
             isViewDirty = true;
-            NeonImagesHandler.getSingleonInstance().removeFromCollection(event.getPosition());
+            NeonImagesHandler.getSingletonInstance().removeFromCollection(event.getPosition());
             mPagerAdapter.setPagerItems();
-            if (NeonImagesHandler.getSingleonInstance().getImagesCollection().size() == 0) {
+            if (NeonImagesHandler.getSingletonInstance().getImagesCollection().size() == 0) {
                 onBackPressed();
             }
             setArrowButton(mPager.getCurrentItem());
@@ -114,7 +115,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_REPLACED_BY_GALLERY) {
             isViewDirty = true;
         } else if (event.getImageEventType() == ImageEditEvent.EVENT_TAG_CHANGED) {
-            NeonImagesHandler.getSingleonInstance().getImagesCollection().set(event.getPosition(), event.getModel());
+            NeonImagesHandler.getSingletonInstance().getImagesCollection().set(event.getPosition(), event.getModel());
         }
     }
 
@@ -136,7 +137,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
 
         } else if (id == R.id.view_pager_rightbtn) {
             int position = mPager.getCurrentItem();
-            if (position < NeonImagesHandler.getSingleonInstance().getImagesCollection().size() - 1) {
+            if (position < NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1) {
                 position++;
                 mPager.setCurrentItem(position);
             }
@@ -147,7 +148,10 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_view_pager, menu);
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null && menu!=null)
+            menu.findItem(R.id.menu_delete).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -163,6 +167,26 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
             /*Intent i = new Intent();
             i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
             setResult(RESULT_OK, i);*/
+            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+                NeonResponse neonResponse = new NeonResponse();
+               /* neonResponse.setRequestCode(getRequestCode());
+                neonResponse.setResponseCode(responseCode);*/
+                neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
+                //neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
+                NeonImagesHandler.getSingletonInstance().getLivePhotosListener().onLivePhotoCollected(neonResponse);
+                if(NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener()!=null)
+                NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener().onNextTag();
+            }
+            onBackPressed();
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_delete) {
+            /*Intent i = new Intent();
+            i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
+            setResult(RESULT_OK, i);*/
+            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+                NeonImagesHandler.getSingletonInstance().removeFromCollection( NeonImagesHandler.getSingletonInstance().getImagesCollection().get(0));
+            }
             onBackPressed();
             return true;
         }

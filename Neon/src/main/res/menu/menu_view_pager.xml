@@ -8,4 +8,14 @@
         android:icon="@drawable/ic_chekmark"
         android:actionViewClass="android.widget.TextView"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_delete"
+        android:orderInCategory="100"
+        android:title="Done"
+        android:visible="false"
+        android:icon="@drawable/ic_cancel"
+        android:actionViewClass="android.widget.TextView"
+        app:showAsAction="always"/>
+
 </menu>
