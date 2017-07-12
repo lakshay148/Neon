@@ -60,6 +60,12 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         if (position == NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1) {
             viewPagerRightBtn.setVisibility(View.GONE);
         }
+
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            viewPagerLeftBtn.setVisibility(View.GONE);
+            viewPagerRightBtn.setVisibility(View.GONE);
+        }
+
         mPagerAdapter = new ImagesReviewViewPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(position);
