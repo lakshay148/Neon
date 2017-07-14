@@ -52,7 +52,9 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
+import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
@@ -157,7 +159,15 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     public void onClickFragmentsView(View v) {
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
-            clickPicture();
+            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+                if(FindLocations.getInstance().checkPermissions(mActivity)){
+                    clickPicture();
+                }
+            }
+            else{
+                clickPicture();
+            }
+
         } else if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
             if (localCameraFacing == CameraFacing.back) {
@@ -212,7 +222,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             mCamera = null;
             mCameraPreview = null;
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+           e.printStackTrace();
         }
     }
 
@@ -868,17 +878,17 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 mCamera.startPreview();*/
 
                 // Modify for live Photos
-                if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-                    mCameraPreview.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent viewPagerIntent = new Intent(context,ImageReviewActivity.class);
-                            viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
-                            startActivity(viewPagerIntent);
-                        }
-                    },200);
 
-                }
+                    if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+                        mCameraPreview.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent viewPagerIntent = new Intent(context,ImageReviewActivity.class);
+                                viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
+                                startActivity(viewPagerIntent);
+                            }
+                        },200);
+                    }
 
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
 

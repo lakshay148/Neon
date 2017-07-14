@@ -5,11 +5,14 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.enumerations.GalleryType;
@@ -31,7 +35,9 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.AnimationUtils;
+import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
@@ -50,6 +56,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,14 +66,17 @@ import java.util.List;
  * @version 1.0
  * @since 25/1/17
  */
-public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements CameraFragment1.SetOnPictureTaken,LivePhotoNextTagListener {
+public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements CameraFragment1.SetOnPictureTaken
+        ,LivePhotoNextTagListener,FindLocations.ILocation
+
+  {
 
     ICameraParam cameraParams;
     RelativeLayout tagsLayout;
     List<ImageTagModel> tagModels;
     int currentTag;
     NormalCameraActivityLayoutBinding binder;
-    private TextView tvImageName, tvTag, tvNext, tvPrevious;
+    private TextView tvTag, tvNext, tvPrevious;
     private ImageView buttonGallery;
 
     @Override
@@ -81,8 +92,10 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
         customize();
         bindCameraFragment();
-        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null)
-        NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
+            FindLocations.getInstance().init(this);
+        }
     }
 
 
@@ -142,7 +155,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     private void bindXml() {
         binder = DataBindingUtil.setContentView(this, R.layout.normal_camera_activity_layout);
-        tvImageName = binder.tvImageName;
+       // tvImageName = binder.tvImageName;
         tvTag = binder.tvTag;
         tvNext = binder.tvSkip;
         tvPrevious = binder.tvPrev;
@@ -351,7 +364,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     private void customize() {
         if (cameraParams.getTagEnabled()) {
-            tvImageName.setVisibility(View.GONE);
+            //tvImageName.setVisibility(View.GONE);
             tagsLayout.setVisibility(View.VISIBLE);
             tagModels = cameraParams.getImageTagsModel();
             initialiazeCurrentTag();
@@ -433,6 +446,53 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             }
         }
 
+
+    }
+
+
+    private Location location;
+    private boolean locationPermission;
+
+      @Override
+      public void getLocation(Location location) {
+              this.location=location;
+      }
+
+      @Override
+      public void getAddress(String locationAddress) {
+
+      }
+
+      @Override
+      public void getPermissionStatus(Boolean locationPermission) {
+          this.locationPermission=locationPermission;
+      }
+
+      @Override
+    public boolean updateExifInfo(FileInfo fileInfo) {
+
+        try {
+            if(location==null)
+                return false;
+            if (cameraParams.getTagEnabled()) {
+                //ImageTagModel imageTagModel = tagModels.get(currentTag);
+                // Save exit attributes to file
+                final File file = new File(fileInfo.getFilePath());
+                if(!file.exists())
+                {
+                    Toast.makeText(this,NeonImagesHandler.getSingletonInstance().getCurrentTag()+" File does not exist",Toast.LENGTH_SHORT).show();
+                return false;
+                }
+                else{
+                    ExifInterfaceHandling exifInterfaceHandling=new ExifInterfaceHandling(file);
+                    exifInterfaceHandling.setLocation(location);
+                    return true;
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return false;
 
     }
 

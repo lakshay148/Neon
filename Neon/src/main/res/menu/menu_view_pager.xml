@@ -10,11 +10,20 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_delete"
+        android:id="@+id/menu_apply"
         android:orderInCategory="100"
-        android:title="Done"
+        android:title="Apply"
         android:visible="false"
-        android:icon="@drawable/ic_cancel"
+        android:icon="@drawable/ic_chekmark"
+        android:actionViewClass="android.widget.TextView"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_retry"
+        android:orderInCategory="100"
+        android:title="Retry"
+        android:visible="false"
+        android:icon="@drawable/ic_close_black_24px1"
         android:actionViewClass="android.widget.TextView"
         app:showAsAction="always"/>
 

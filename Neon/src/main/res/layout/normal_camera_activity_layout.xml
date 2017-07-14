@@ -61,7 +61,7 @@
                 android:onClick="@{handlers::onClick}"/>
         </RelativeLayout>
 
-        <TextView
+       <!-- <TextView
             android:id="@+id/tvImageName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,8 +72,8 @@
             android:padding="10dp"
             android:textColor="@android:color/white"
             android:textSize="14sp"
-            android:visibility="gone" />
-
+            android:visibility="visible" />
+-->
         <LinearLayout
             android:id="@+id/belowLayout"
             android:layout_width="match_parent"

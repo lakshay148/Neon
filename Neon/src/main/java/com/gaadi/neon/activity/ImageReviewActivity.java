@@ -12,12 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.gaadi.neon.adapter.ImagesReviewViewPagerAdapter;
 import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
@@ -160,8 +163,12 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_view_pager, menu);
-        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null && menu!=null)
-            menu.findItem(R.id.menu_delete).setVisible(true);
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null && menu!=null){
+            menu.findItem(R.id.menu_done).setVisible(false);
+            menu.findItem(R.id.menu_retry).setVisible(true);
+            menu.findItem(R.id.menu_apply).setVisible(true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -190,23 +197,30 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
             /*Intent i = new Intent();
             i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
             setResult(RESULT_OK, i);*/
-            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-                NeonResponse neonResponse = new NeonResponse();
-               /* neonResponse.setRequestCode(getRequestCode());
-                neonResponse.setResponseCode(responseCode);*/
-                neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
-                //neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
-                NeonImagesHandler.getSingletonInstance().getLivePhotosListener().onLivePhotoCollected(neonResponse);
-                if(NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener()!=null)
-                NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener().onNextTag();
-            }
+
             super.onBackPressed();
             return true;
         }
-        if (item.getItemId() == R.id.menu_delete) {
-            /*Intent i = new Intent();
-            i.putExtra(Constants.IMAGE_MODEL_FOR__REVIEW, gallaryItemsFiles);
-            setResult(RESULT_OK, i);*/
+        if(item.getItemId()==R.id.menu_apply){
+            boolean isUpdate=true;
+            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+                int pos=NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1;
+                isUpdate= NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener().updateExifInfo(NeonImagesHandler.getSingletonInstance().getImagesCollection().get(pos));
+                if(isUpdate){
+                    NeonResponse neonResponse = new NeonResponse();
+                    neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
+                    NeonImagesHandler.getSingletonInstance().getLivePhotosListener().onLivePhotoCollected(neonResponse);
+                    NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener().onNextTag();
+                }
+                else{
+                    Toast.makeText(this,"Finding location.Please wait.",Toast.LENGTH_SHORT).show();
+                }
+            }
+            if(isUpdate)
+            super.onBackPressed();
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_retry) {
             if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
                 NeonImagesHandler.getSingletonInstance().removeFromCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
             }

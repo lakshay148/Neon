@@ -2,6 +2,7 @@ package com.gaadi.neon;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.widget.Toast;
 
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
@@ -22,6 +23,7 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 
@@ -32,7 +34,7 @@ import java.util.List;
  * @author lakshaygirdhar
  * @since 13-08-2016
  */
-public class PhotosLibrary {
+public class PhotosLibrary{
 
     public static void collectPhotos(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         collectPhotos(activity,LibraryMode.Restrict,photosMode,listener);
@@ -60,7 +62,6 @@ public class PhotosLibrary {
 
 
     public static void collectLivePhotos(final Context activity,final List<ImageTagModel> tagList, final OnImageCollectionListener imageCollectionListener, final LivePhotosListener listener) throws NullPointerException, NeonException {
-
         try {
 
 
@@ -254,6 +255,4 @@ public class PhotosLibrary {
         activity.startActivity(neutralIntent);
 
     }
-
-
 }

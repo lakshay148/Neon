@@ -1,7 +1,10 @@
 package com.customise.gaadi.camera;
 
+import android.location.Location;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,15 +23,19 @@ import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
+import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnImageCollectionListener {
+public class MainActivity extends AppCompatActivity implements OnImageCollectionListener,FindLocations.ILocation {
 
     private static final String TAG = "MainActivity";
     private int numberOfTags = 5;
@@ -299,27 +306,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void livePhotoClick(View view){
 
-        try {
-            ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
-            for (int i = 0; i < numberOfTags; i++) {
-                list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-            }
-            PhotosLibrary.collectLivePhotos(this, list, new OnImageCollectionListener() {
-                @Override
-                public void imageCollection(NeonResponse neonResponse) {
+        // For Testing Purpose
+        FindLocations.getInstance().init(this);
 
-                }
-            }, new LivePhotosListener() {
-                @Override
-                public void onLivePhotoCollected(NeonResponse neonResponse) {
-                    int index=neonResponse.getImageCollection().size();
-                    Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(index-1).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
 
-                }
-            });
-        }catch (NeonException e){
-            e.printStackTrace();
-        }
     }
 
 
@@ -864,5 +854,80 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
             allreadyImages = neonResponse.getImageCollection();
             Toast.makeText(this,"Got collection with size " + neonResponse.getImageCollection().size(),Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void getAddress(String locationAddress) {
+
+    }
+
+    private Location location;
+
+    @Override
+    public void getLocation(Location location) {
+        this.location=location;
+
+    }
+
+    @Override
+    public void getPermissionStatus(final Boolean locationPermission) {
+
+        findViewById(R.id.livePhoto).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if(locationPermission){
+                    Toast.makeText(MainActivity.this,"Permission On",Toast.LENGTH_SHORT).show();
+                    try {
+
+
+                        ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+
+                        for (int i = 0; i < 2; i++) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1,location));
+                        }
+                        PhotosLibrary.collectLivePhotos(MainActivity.this, list, new OnImageCollectionListener() {
+                            @Override
+                            public void imageCollection(NeonResponse neonResponse) {
+
+                            }
+                        }, new LivePhotosListener() {
+                            @Override
+                            public void onLivePhotoCollected(final NeonResponse neonResponse) {
+                                final int index=neonResponse.getImageCollection().size();
+                                Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(index-1).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
+
+                                        try {
+                                            File file=new File(neonResponse.getImageCollection().get(index-1).getFilePath());
+                                            ExifInterfaceHandling exifInterfaceHandling=new ExifInterfaceHandling(file);
+                                            String lati = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_LATITUDE_REF);
+                                            String longi = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_LONGITUDE_REF);
+                                            String datetamp = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_DATESTAMP);
+                                            String timestamp = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_TIMESTAMP);
+                                            String dateTime = exifInterfaceHandling.getAttribute (ExifInterface.TAG_DATETIME);
+
+                                            Log.i("TTTAG------------", ""+ neonResponse.getImageCollection().get(index-1).getFileTag().getTagName());
+                                            Log.i("TTlat------------", ""+ lati);
+                                            Log.i("TTlong------------", ""+ longi);
+                                            Log.i("TTtimestamp", ""+ dateTime);
+                                        }catch (IOException e){
+                                            e.printStackTrace();
+
+                                        }
+                           }
+                        });
+                    }catch (NeonException e){
+                        e.printStackTrace();
+                    }
+
+                }else{
+                    Toast.makeText(MainActivity.this,"Permission OFF",Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        },100);
+
+
     }
 }

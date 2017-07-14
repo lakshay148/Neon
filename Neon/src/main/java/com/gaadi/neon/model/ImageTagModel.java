@@ -1,5 +1,7 @@
 package com.gaadi.neon.model;
 
+import android.location.Location;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +15,7 @@ public class ImageTagModel implements Serializable {
     private boolean mandatory;
     private String tagId;
     private int numberOfPhotos;
+    private Location location;
 
     public ImageTagModel() {
     }
@@ -28,6 +31,14 @@ public class ImageTagModel implements Serializable {
         tagId = _tagId;
         mandatory = _mandatory;
         numberOfPhotos = _numberOfPhotos;
+    }
+
+    public ImageTagModel(String _tagName, String _tagId, boolean _mandatory,int _numberOfPhotos,Location _location) {
+        tagName = _tagName;
+        tagId = _tagId;
+        mandatory = _mandatory;
+        numberOfPhotos = _numberOfPhotos;
+        location=_location;
     }
 
 
@@ -61,5 +72,13 @@ public class ImageTagModel implements Serializable {
 
     public void setNumberOfPhotos(int numberOfPhotos) {
         this.numberOfPhotos = numberOfPhotos;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }
