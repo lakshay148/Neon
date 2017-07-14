@@ -1,9 +1,11 @@
 package com.gaadi.neon.activity.gallery;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,17 +48,35 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
     HorizontalGalleryLayoutBinding binder;
     ArrayList<FileInfo> fileInfos;
     MenuItem textViewDone, menuItemCamera;
+    List<FileInfo> recentelyImageCollection;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recentelyImageCollection = new ArrayList<>();
         bindXml();
         String title = getIntent().getStringExtra(Constants.BucketName);
         if (title == null || title.length() <= 0) {
             title = getString(R.string.gallery);
         }
         setTitle(title);
+    }
+
+    public void addImageToRecentelySelected(FileInfo fileInfo) {
+        recentelyImageCollection.add(fileInfo);
+    }
+
+    public boolean removeImageFromRecentCollection(FileInfo fileInfo) {
+        if (recentelyImageCollection == null || recentelyImageCollection.size() <= 0) {
+            return true;
+        }
+        for (int i = 0; i < recentelyImageCollection.size(); i++) {
+            if (recentelyImageCollection.get(i).getFilePath().equals(fileInfo.getFilePath())) {
+                return recentelyImageCollection.remove(i) != null;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -109,11 +129,31 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
     @Override
     public void onBackPressed() {
-        if (NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
+        if (recentelyImageCollection != null && recentelyImageCollection.size() > 0) {
+            new AlertDialog.Builder(this).setTitle("Are you sure want to loose all selected images?")
+                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    for (int i = 0; i < recentelyImageCollection.size(); i++) {
+                        NeonImagesHandler.getSingletonInstance().removeFromCollection(recentelyImageCollection.get(i));
+                    }
+                    finish();
+                }
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+            return;
+        }
+
+        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
             super.onBackPressed();
         } else {
-            if (!NeonImagesHandler.getSingleonInstance().getGalleryParam().enableFolderStructure()) {
-                NeonImagesHandler.getSingleonInstance().showBackOperationAlertIfNeeded(this);
+            if (!NeonImagesHandler.getSingletonInstance().getGalleryParam().enableFolderStructure()) {
+                NeonImagesHandler.getSingletonInstance().showBackOperationAlertIfNeeded(this);
             } else {
                 super.onBackPressed();
             }
