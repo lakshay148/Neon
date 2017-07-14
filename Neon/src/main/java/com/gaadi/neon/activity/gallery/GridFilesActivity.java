@@ -1,8 +1,10 @@
 package com.gaadi.neon.activity.gallery;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -33,9 +35,12 @@ import java.util.List;
 
 public class GridFilesActivity extends NeonBaseGalleryActivity {
 
+    List<FileInfo> recentelyImageCollection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recentelyImageCollection = new ArrayList<>();
         bindXml();
         String title = getIntent().getStringExtra(Constants.BucketName);
         if (title == null || title.length() <= 0) {
@@ -43,6 +48,23 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
         }
         setTitle(title);
     }
+
+    public void addImageToRecentelySelected(FileInfo fileInfo) {
+        recentelyImageCollection.add(fileInfo);
+    }
+
+    public boolean removeImageFromRecentCollection(FileInfo fileInfo) {
+        if (recentelyImageCollection == null || recentelyImageCollection.size() <= 0) {
+            return true;
+        }
+        for (int i = 0; i < recentelyImageCollection.size(); i++) {
+            if (recentelyImageCollection.get(i).getFilePath().equals(fileInfo.getFilePath())) {
+                return recentelyImageCollection.remove(i) != null;
+            }
+        }
+        return true;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,26 +80,26 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-           onBackPressed();
+            onBackPressed();
             return true;
         } else if (id == R.id.menu_next) {
             if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
                     NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
                 Toast.makeText(this, R.string.no_image_selected, Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
-            }else {
+            } else {
                 if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
-                    if(NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing()
+                    if (NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing()
                             || NeonImagesHandler.getSingletonInstance().getGalleryParam().getTagEnabled()) {
                         Intent intent = new Intent(this, ImageShow.class);
                         startActivity(intent);
                         setResult(Constants.destroyPreviousActivity);
                         finish();
-                    }else{
-                        if(NeonImagesHandler.getSingletonInstance().getGalleryParam().enableFolderStructure()){
+                    } else {
+                        if (NeonImagesHandler.getSingletonInstance().getGalleryParam().enableFolderStructure()) {
                             setResult(RESULT_OK);
                             finish();
-                        }else {
+                        } else {
                             if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
                                 NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
                                 finish();
@@ -89,7 +111,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                     finish();
                 }
             }
-        }else if (id == R.id.menuCamera) {
+        } else if (id == R.id.menuCamera) {
             performCameraOperation();
             setResult(Constants.destroyPreviousActivity);
             finish();
@@ -99,12 +121,32 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
 
     @Override
     public void onBackPressed() {
-        if(NeonImagesHandler.getSingleonInstance().isNeutralEnabled()){
+
+        if (recentelyImageCollection != null && recentelyImageCollection.size() > 0) {
+            new AlertDialog.Builder(this).setTitle("Are you sure want to loose all selected images?")
+                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    for (int i = 0; i < recentelyImageCollection.size(); i++) {
+                        NeonImagesHandler.getSingletonInstance().removeFromCollection(recentelyImageCollection.get(i));
+                    }
+                    finish();
+                }
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+            return;
+        }
+        if (NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
             super.onBackPressed();
-        }else{
-            if(!NeonImagesHandler.getSingleonInstance().getGalleryParam().enableFolderStructure()){
+        } else {
+            if (!NeonImagesHandler.getSingleonInstance().getGalleryParam().enableFolderStructure()) {
                 NeonImagesHandler.getSingleonInstance().showBackOperationAlertIfNeeded(this);
-            }else{
+            } else {
                 super.onBackPressed();
             }
 
@@ -114,7 +156,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
     private void performCameraOperation() {
 
         ICameraParam cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
-        if(cameraParam == null){
+        if (cameraParam == null) {
             cameraParam = new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
@@ -179,7 +221,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
             };
         }
         try {
-            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
         } catch (NeonException e) {
             e.printStackTrace();
         }
@@ -190,18 +232,18 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
             askForPermissionIfNeeded(PermissionType.write_external_storage, new OnPermissionResultListener() {
                 @Override
                 public void onResult(boolean permissionGranted) {
-                    if(permissionGranted){
-                        ActivityGridFilesBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_files,frameLayout,true);
+                    if (permissionGranted) {
+                        ActivityGridFilesBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_files, frameLayout, true);
                         GridFilesAdapter adapter = new GridFilesAdapter(GridFilesActivity.this, getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId)));
                         binder.gvFolderPhotos.setAdapter(adapter);
-                    }else{
+                    } else {
                         if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
                             finish();
-                        }else{
+                        } else {
                             NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(GridFilesActivity.this,
                                     ResponseCode.Write_Permission_Error);
                         }
-                        Toast.makeText(GridFilesActivity.this,R.string.permission_error,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GridFilesActivity.this, R.string.permission_error, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
