@@ -1,6 +1,7 @@
 package com.gaadi.neon.interfaces;
 
 import com.gaadi.neon.model.ImageTagModel;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
 
 import java.util.List;
@@ -27,5 +28,7 @@ public interface IParam {
     List<FileInfo> getAlreadyAddedImages();
 
     boolean enableImageEditing();
+
+    CustomParameters getCustomParameters();
 
 }

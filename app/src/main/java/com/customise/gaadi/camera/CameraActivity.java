@@ -21,6 +21,7 @@ import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
@@ -51,7 +52,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    PhotosLibrary.collectPhotos(CameraActivity.this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                    PhotosLibrary.collectPhotos(CameraActivity.this,NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                         @Override
                         public boolean selectVideos() {
                             return false;
@@ -100,6 +101,11 @@ public class CameraActivity extends AppCompatActivity {
                         @Override
                         public boolean enableImageEditing() {
                             return false;
+                        }
+
+                        @Override
+                        public CustomParameters getCustomParameters() {
+                            return null;
                         }
                     }), new OnImageCollectionListener() {
 
@@ -207,6 +213,11 @@ public class CameraActivity extends AppCompatActivity {
         public boolean enableImageEditing() {
             return false;
         }
+
+        @Override
+        public CustomParameters getCustomParameters() {
+            return null;
+        }
     };
 
     private void showImages() {
@@ -214,8 +225,8 @@ public class CameraActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                NeonImagesHandler.getSingleonInstance().setImagesCollection(totalList);
-                NeonImagesHandler.getSingleonInstance().setCameraParam(cameraParam);
+                NeonImagesHandler.getSingletonInstance().setImagesCollection(totalList);
+                NeonImagesHandler.getSingletonInstance().setCameraParam(cameraParam);
                 ImageShowFragment fragment = new ImageShowFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.frame,fragment).commitNowAllowingStateLoss();
 

@@ -22,6 +22,7 @@ import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
@@ -200,7 +201,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
 
                 @Override
                 public boolean getTagEnabled() {
-                    return NeonImagesHandler.getSingleonInstance().getGalleryParam().getTagEnabled();
+                    return NeonImagesHandler.getSingletonInstance().getGalleryParam().getTagEnabled();
                 }
 
                 @Override
@@ -218,10 +219,15 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                     return NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing();
                 }
 
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return NeonImagesHandler.getSingletonInstance().getGalleryParam().getCustomParameters();
+                }
+
             };
         }
         try {
-            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
         } catch (NeonException e) {
             e.printStackTrace();
         }

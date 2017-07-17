@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
@@ -16,11 +17,13 @@ import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NeutralActivityLayoutBinding;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +53,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
             binder.imageShowFragmentContainer.setVisibility(View.GONE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
-                if(tagModels == null || tagModels.size()<=0){
+                if (tagModels == null || tagModels.size() <= 0) {
                     return;
                 }
                 tagModels = getMandetoryTags(tagModels);
@@ -59,7 +62,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     tags[i] = "* " + tagModels.get(i).getTagName();
 
                 }
-                adapter = new ArrayAdapter<>(this, R.layout.single_textview,R.id.tagText, tags);
+                adapter = new ArrayAdapter<>(this, R.layout.single_textview, R.id.tagText, tags);
             }
             binder.txtTagTitle.setVisibility(View.VISIBLE);
             binder.tabList.setAdapter(adapter);
@@ -75,7 +78,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
         List<ImageTagModel> fileterdList = new ArrayList<>();
         for (ImageTagModel singleModel :
                 tagModels) {
-            if(singleModel.isMandatory()){
+            if (singleModel.isMandatory()) {
                 fileterdList.add(singleModel);
             }
         }
@@ -85,6 +88,12 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     private void bindXml() {
         binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout, frameLayout, true);
         binder.setHandlers(this);
+        if (NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters() != null) {
+            binder.addPhotoCamera.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
+                    .gethideCameraButtonInNeutral() ? View.GONE : View.VISIBLE);
+            binder.addPhotoGallary.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
+                    .getHideGalleryButtonInNeutral() ? View.GONE : View.VISIBLE);
+        }
         ImageShowFragment imageShowFragment = new ImageShowFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.imageShowFragmentContainer, imageShowFragment).commit();
@@ -95,7 +104,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
         if (id == R.id.addPhotoCamera) {
             try {
-                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingletonInstance().getLibraryMode(),PhotosMode.setCameraMode().setParams(new ICameraParam() {
+                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
                     @Override
                     public CameraFacing getCameraFacing() {
                         return NeonImagesHandler.getSingletonInstance().getNeutralParam().getCameraFacing();
@@ -147,7 +156,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     }
 
                     @Override
-                    public ArrayList<FileInfo> getAlreadyAddedImages() {
+                    public List<FileInfo> getAlreadyAddedImages() {
                         return null;
                     }
 
@@ -155,13 +164,18 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     public boolean enableImageEditing() {
                         return NeonImagesHandler.getSingletonInstance().getNeutralParam().enableImageEditing();
                     }
+
+                    @Override
+                    public CustomParameters getCustomParameters() {
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters();
+                    }
                 }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
             }
         } else if (id == R.id.addPhotoGallary) {
             try {
-                PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                     @Override
                     public boolean selectVideos() {
                         return NeonImagesHandler.getSingletonInstance().getNeutralParam().selectVideos();
@@ -203,13 +217,18 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     }
 
                     @Override
-                    public ArrayList<FileInfo> getAlreadyAddedImages() {
+                    public List<FileInfo> getAlreadyAddedImages() {
                         return null;
                     }
 
                     @Override
                     public boolean enableImageEditing() {
                         return NeonImagesHandler.getSingletonInstance().getNeutralParam().enableImageEditing();
+                    }
+
+                    @Override
+                    public CustomParameters getCustomParameters() {
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters();
                     }
                 }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {

@@ -22,6 +22,7 @@ import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
@@ -126,6 +127,11 @@ public class PhotosLibrary{
                 @Override
                 public boolean enableImageEditing() {
                     return false;
+                }
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
                 }
             }), imageCollectionListener ,listener);
         } catch (NeonException e) {

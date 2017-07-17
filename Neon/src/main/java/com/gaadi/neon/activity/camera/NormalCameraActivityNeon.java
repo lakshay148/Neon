@@ -35,6 +35,7 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.AnimationUtils;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.FindLocations;
@@ -243,12 +244,17 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
                         @Override
                         public boolean enableImageEditing() {
-                            return NeonImagesHandler.getSingleonInstance().getCameraParam().enableImageEditing();
+                            return NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing();
+                        }
+
+                        @Override
+                        public CustomParameters getCustomParameters() {
+                            return NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters();
                         }
 
                     };
                 }
-                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+                PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
                 finish();
             } catch (NeonException e) {
                 e.printStackTrace();

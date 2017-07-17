@@ -20,6 +20,7 @@ import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
@@ -102,7 +103,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
 
     private void performCameraOperation() {
 
-        ICameraParam cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
+        ICameraParam cameraParam = NeonImagesHandler.getSingletonInstance().getCameraParam();
         if (cameraParam == null) {
             cameraParam = new ICameraParam() {
                 @Override
@@ -142,7 +143,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
 
                 @Override
                 public int getNumberOfPhotos() {
-                    return NeonImagesHandler.getSingleonInstance().getGalleryParam().getNumberOfPhotos();
+                    return NeonImagesHandler.getSingletonInstance().getGalleryParam().getNumberOfPhotos();
                 }
 
                 @Override
@@ -163,6 +164,11 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
                 @Override
                 public boolean enableImageEditing() {
                     return NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing();
+                }
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return NeonImagesHandler.getSingletonInstance().getGalleryParam().getCustomParameters();
                 }
 
             };

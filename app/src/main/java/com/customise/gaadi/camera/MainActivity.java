@@ -23,6 +23,7 @@ import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
+import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnImageCollectionListener,FindLocations.ILocation {
+public class MainActivity extends AppCompatActivity implements OnImageCollectionListener, FindLocations.ILocation {
 
     private static final String TAG = "MainActivity";
     private int numberOfTags = 5;
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
+                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
                     }
                     return list;
                 }
@@ -116,8 +117,13 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     return false;
                 }
 
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
 
-            }),this);
+
+            }), this);
         } catch (NullPointerException e) {
 
         } catch (NeonException e) {
@@ -128,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void cameraOnlyClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setCameraMode().setParams(new ICameraParam() {
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.front;
@@ -178,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
+                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
                     }
                     return list;
                 }
@@ -193,8 +199,13 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     return false;
                 }
 
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
 
-            }),this);
+
+            }), this);
         } catch (NullPointerException e) {
 
         } catch (NeonException e) {
@@ -203,9 +214,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     }
 
-    public void neutralClicked(View view){
+    public void neutralClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, LibraryMode.Relax,PhotosMode.setNeutralMode().setParams(new INeutralParam() {
+            PhotosLibrary.collectPhotos(this, LibraryMode.Relax, PhotosMode.setNeutralMode().setParams(new INeutralParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.front;
@@ -238,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public boolean cameraToGallerySwitchEnabled() {
-                    return true;
+                    return false;
                 }
 
                 @Override
@@ -258,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public boolean galleryToCameraSwitchEnabled() {
-                    return true;
+                    return false;
                 }
 
                 @Override
@@ -280,10 +291,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -298,13 +309,19 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return new CustomParameters.CustomParametersBuilder().sethideCameraButtonInNeutral(false)
+                            .setHideGalleryButtonInNeutral(true).build();
+                }
+            }), this);
         } catch (NeonException e) {
             e.printStackTrace();
         }
     }
 
-    public void livePhotoClick(View view){
+    public void livePhotoClick(View view) {
 
         // For Testing Purpose
         FindLocations.getInstance().init(this);
@@ -313,9 +330,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
     }
 
 
-    public void gridOnlyFolderClicked(View view){
+    public void gridOnlyFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -355,10 +372,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -373,15 +390,20 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
 
-    public void gridPriorityFolderClicked(View view){
+    public void gridPriorityFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -421,10 +443,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -439,15 +461,20 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
 
-    public void gridOnlyFilesClicked(View view){
+    public void gridOnlyFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,NeonImagesHandler.getSingleonInstance().getLibraryMode(),PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -487,10 +514,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -505,15 +532,20 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
 
-    public void gridPriorityFilesClicked(View view){
+    public void gridPriorityFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -553,10 +585,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -571,17 +603,21 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
 
 
-
-    public void horizontalOnlyFolderClicked(View view){
+    public void horizontalOnlyFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -621,10 +657,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -639,15 +675,20 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
 
-    public void horizontalPriorityFolderClicked(View view){
+    public void horizontalPriorityFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -687,10 +728,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -705,15 +746,20 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
 
-    public void horizontalOnlyFilesClicked(View view){
+    public void horizontalOnlyFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -753,10 +799,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -771,15 +817,20 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
 
-    public void horizontalPrioriyFilesClicked(View view){
+    public void horizontalPrioriyFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this,PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -819,10 +870,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                     for (int i = 0; i < numberOfTags; i++) {
-                        if(i%2==0) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1));
-                        }else{
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false,1));
+                        if (i % 2 == 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
                         }
                     }
                     return list;
@@ -837,22 +888,23 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public boolean enableImageEditing() {
                     return false;
                 }
-            }),this);
-        }catch (Exception e){
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            }), this);
+        } catch (Exception e) {
 
         }
     }
-
-
-
-
 
 
     @Override
     public void imageCollection(NeonResponse neonResponse) {
-        if(neonResponse.getImageCollection() != null && neonResponse.getImageCollection().size()>0){
+        if (neonResponse.getImageCollection() != null && neonResponse.getImageCollection().size() > 0) {
             allreadyImages = neonResponse.getImageCollection();
-            Toast.makeText(this,"Got collection with size " + neonResponse.getImageCollection().size(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Got collection with size " + neonResponse.getImageCollection().size(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -865,7 +917,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     @Override
     public void getLocation(Location location) {
-        this.location=location;
+        this.location = location;
 
     }
 
@@ -876,15 +928,15 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
             @Override
             public void run() {
 
-                if(locationPermission){
-                    Toast.makeText(MainActivity.this,"Permission On",Toast.LENGTH_SHORT).show();
+                if (locationPermission) {
+                    Toast.makeText(MainActivity.this, "Permission On", Toast.LENGTH_SHORT).show();
                     try {
 
 
                         ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
 
                         for (int i = 0; i < 2; i++) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true,1,location));
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1, location));
                         }
                         PhotosLibrary.collectLivePhotos(MainActivity.this, list, new OnImageCollectionListener() {
                             @Override
@@ -894,39 +946,39 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                         }, new LivePhotosListener() {
                             @Override
                             public void onLivePhotoCollected(final NeonResponse neonResponse) {
-                                final int index=neonResponse.getImageCollection().size();
-                                Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(index-1).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
+                                final int index = neonResponse.getImageCollection().size();
+                                Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(index - 1).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
 
-                                        try {
-                                            File file=new File(neonResponse.getImageCollection().get(index-1).getFilePath());
-                                            ExifInterfaceHandling exifInterfaceHandling=new ExifInterfaceHandling(file);
-                                            String lati = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_LATITUDE_REF);
-                                            String longi = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_LONGITUDE_REF);
-                                            String datetamp = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_DATESTAMP);
-                                            String timestamp = exifInterfaceHandling.getAttribute (ExifInterface.TAG_GPS_TIMESTAMP);
-                                            String dateTime = exifInterfaceHandling.getAttribute (ExifInterface.TAG_DATETIME);
+                                try {
+                                    File file = new File(neonResponse.getImageCollection().get(index - 1).getFilePath());
+                                    ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                                    String lati = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                                    String longi = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                                    String datetamp = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_DATESTAMP);
+                                    String timestamp = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP);
+                                    String dateTime = exifInterfaceHandling.getAttribute(ExifInterface.TAG_DATETIME);
 
-                                            Log.i("TTTAG------------", ""+ neonResponse.getImageCollection().get(index-1).getFileTag().getTagName());
-                                            Log.i("TTlat------------", ""+ lati);
-                                            Log.i("TTlong------------", ""+ longi);
-                                            Log.i("TTtimestamp", ""+ dateTime);
-                                        }catch (IOException e){
-                                            e.printStackTrace();
+                                    Log.i("TTTAG------------", "" + neonResponse.getImageCollection().get(index - 1).getFileTag().getTagName());
+                                    Log.i("TTlat------------", "" + lati);
+                                    Log.i("TTlong------------", "" + longi);
+                                    Log.i("TTtimestamp", "" + dateTime);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
 
-                                        }
-                           }
+                                }
+                            }
                         });
-                    }catch (NeonException e){
+                    } catch (NeonException e) {
                         e.printStackTrace();
                     }
 
-                }else{
-                    Toast.makeText(MainActivity.this,"Permission OFF",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Permission OFF", Toast.LENGTH_SHORT).show();
                 }
 
 
             }
-        },100);
+        }, 100);
 
 
     }
