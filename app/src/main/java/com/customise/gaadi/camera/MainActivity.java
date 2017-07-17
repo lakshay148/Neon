@@ -312,8 +312,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return new CustomParameters.CustomParametersBuilder().sethideCameraButtonInNeutral(false)
-                            .setHideGalleryButtonInNeutral(true).build();
+                    return new CustomParameters.CustomParametersBuilder().sethideCameraButtonInNeutral(false).build();
                 }
             }), this);
         } catch (NeonException e) {
