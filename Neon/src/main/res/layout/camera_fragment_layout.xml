@@ -37,8 +37,8 @@
             android:id="@+id/currentFlashMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/neon_default_margin"
+            android:layout_marginStart="@dimen/neon_default_margin"
             android:clickable="true"
             android:contentDescription="@null"
             android:padding="5dp"
@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/llFlash"
-        android:layout_margin="@dimen/default_margin"
+        android:layout_margin="@dimen/neon_default_margin"
         android:contentDescription="@null"
         app:srcCompat="@drawable/camera_switch" />
 
