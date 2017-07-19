@@ -166,6 +166,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
         if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
             tvNext.setVisibility(View.INVISIBLE);
+            tvPrevious.setVisibility(View.INVISIBLE);
         }
         else {
             tvNext.setVisibility(View.VISIBLE);
@@ -320,16 +321,17 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         currentTag++;
 
         if (currentTag == tagModels.size() - 1) {
-            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-                tvNext.setVisibility(View.INVISIBLE);
-            }
-            else {
+
                 tvNext.setVisibility(View.VISIBLE);
                 tvNext.setText(getString(R.string.finish));
-            }
+
         }
         if (currentTag > 0) {
             tvPrevious.setVisibility(View.VISIBLE);
+        }
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            tvNext.setVisibility(View.INVISIBLE);
+            tvPrevious.setVisibility(View.INVISIBLE);
         }
 
         return tagModels.get(currentTag);
@@ -358,12 +360,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
 
         if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-            if(NeonImagesHandler.getSingletonInstance().getImagesCollection()!=null && currentTag<NeonImagesHandler.getSingletonInstance().getImagesCollection().size()){
-                tvNext.setVisibility(View.VISIBLE);
-            }
-            else {
-                tvNext.setVisibility(View.INVISIBLE);
-            }
+            tvNext.setVisibility(View.INVISIBLE);
+            tvPrevious.setVisibility(View.INVISIBLE);
             NeonImagesHandler.getSingletonInstance().setCurrentTag(tvTag.getText().toString().trim());
         }
     }
@@ -392,17 +390,16 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             }
         }
         if (currentTag == tagModels.size() - 1) {
-
-            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-                tvNext.setVisibility(View.INVISIBLE);
-            }
-            else {
                 tvNext.setVisibility(View.VISIBLE);
                 tvNext.setText(getString(R.string.finish));
-            }
+
         }
         if (currentTag > 0) {
             tvPrevious.setVisibility(View.VISIBLE);
+        }
+        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+            tvNext.setVisibility(View.INVISIBLE);
+            tvPrevious.setVisibility(View.INVISIBLE);
         }
     }
 

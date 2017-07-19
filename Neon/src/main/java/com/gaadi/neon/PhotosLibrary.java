@@ -106,7 +106,7 @@ public class PhotosLibrary{
 
                 @Override
                 public int getNumberOfPhotos() {
-                    return 0;
+                    return 1;
                 }
 
                 @Override
