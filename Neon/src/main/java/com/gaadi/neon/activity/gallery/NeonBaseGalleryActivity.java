@@ -32,7 +32,7 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
         String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
 
         Cursor mCursor;
-        if (NeonImagesHandler.getSingleonInstance().getGalleryParam() != null && NeonImagesHandler.getSingleonInstance().getGalleryParam().isRestrictedExtensionJpgPngEnabled()) {
+        if (NeonImagesHandler.getSingletonInstance().getGalleryParam() != null && NeonImagesHandler.getSingletonInstance().getGalleryParam().isRestrictedExtensionJpgPngEnabled()) {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, MediaStore.Images.Media.MIME_TYPE + " in (?, ?)", new String[]{"image/jpeg", "image/png"}, orderBy);
         } else {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, null, null, orderBy);
@@ -77,8 +77,9 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
 
         String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
 
-        String selection = MediaStore.Images.Media.BUCKET_ID + " =? and " + MediaStore.Images.Media.SIZE + " >?";
-        String[] selectionArgs = new String[]{bucketId, String.valueOf(0)};
+        String selection = MediaStore.Images.Media.BUCKET_ID + " =? and " + MediaStore.Images.Media.SIZE + " >? and "
+                + MediaStore.Images.Media.MIME_TYPE + " in (?, ?)";
+        String[] selectionArgs = new String[]{bucketId, String.valueOf(0), "image/jpeg", "image/png"};
         if(bucketId == null){
             selection = null;
             selectionArgs = null;

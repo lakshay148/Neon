@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/Pedro/Development/Projects/expandable-selector-android/expandableselector/src/main/res/values/attrs.xml -->
-    <eat-comment/>
-    <attr name="expandableItemStyle"/>
-    <declare-styleable name="expandable_selector"><attr format="boolean" name="hide_background_if_collapsed"/><attr format="integer" name="animation_duration"/><attr format="boolean" name="hide_first_item_on_collapse"/></declare-styleable>
-</resources>
