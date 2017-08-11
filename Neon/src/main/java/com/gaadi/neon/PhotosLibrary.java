@@ -41,7 +41,8 @@ public class PhotosLibrary{
         collectPhotos(activity,LibraryMode.Restrict,photosMode,listener);
     }
 
-    public static void collectPhotos(Context activity, LibraryMode libraryMode, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
+    public static void collectPhotos(Context activity, LibraryMode libraryMode,
+                                     PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         NeonImagesHandler.getSingleonInstance().setImageResultListener(listener);
         NeonImagesHandler.getSingleonInstance().setLibraryMode(libraryMode);
         validate(activity, photosMode,listener);
@@ -62,78 +63,13 @@ public class PhotosLibrary{
 
 
 
-    public static void collectLivePhotos(final Context activity,final List<ImageTagModel> tagList, final OnImageCollectionListener imageCollectionListener, final LivePhotosListener listener) throws NullPointerException, NeonException {
+    public static void collectLivePhotos(final Context activity,final List<ImageTagModel> tagList,
+                             final OnImageCollectionListener imageCollectionListener,
+                                 final LivePhotosListener listener, ICameraParam iCameraParam) throws NullPointerException, NeonException {
         try {
 
+            collectPhotos(activity,LibraryMode.Relax,PhotosMode.setCameraMode().setParams(iCameraParam),imageCollectionListener,listener);
 
-            collectPhotos(activity, LibraryMode.Restrict, PhotosMode.setCameraMode().setParams(new ICameraParam() {
-
-
-                @Override
-                public CameraFacing getCameraFacing() {
-                    return CameraFacing.back;
-                }
-
-                @Override
-                public CameraOrientation getCameraOrientation() {
-                    return CameraOrientation.portrait;
-                }
-
-                @Override
-                public boolean getFlashEnabled() {
-                    return false;
-                }
-
-                @Override
-                public boolean getCameraSwitchingEnabled() {
-                    return false;
-                }
-
-                @Override
-                public CameraType getCameraViewType() {
-                    return CameraType.normal_camera;
-                }
-
-                @Override
-                public boolean cameraToGallerySwitchEnabled() {
-                    return false;
-                }
-
-                @Override
-                public boolean getVideoCaptureEnabled() {
-                    return false;
-                }
-
-                @Override
-                public int getNumberOfPhotos() {
-                    return 1;
-                }
-
-                @Override
-                public boolean getTagEnabled() {
-                    return true;
-                }
-
-                @Override
-                public List<ImageTagModel> getImageTagsModel() {
-                    return tagList;
-                }
-
-                @Override
-                public ArrayList<FileInfo> getAlreadyAddedImages() {
-                    return null;
-                }
-
-                @Override
-                public boolean enableImageEditing() {
-                    return false;
-                }
-
-                @Override
-                public CustomParameters getCustomParameters() {
-                    return null;
-                }
-            }), imageCollectionListener ,listener);
         } catch (NeonException e) {
             e.printStackTrace();
         }
@@ -141,14 +77,15 @@ public class PhotosLibrary{
 
 
 
-    public static void collectPhotos(int requestCode, Context activity, LibraryMode libraryMode, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
-        NeonImagesHandler.getSingleonInstance().setImageResultListener(listener);
-        NeonImagesHandler.getSingleonInstance().setLibraryMode(libraryMode);
-        NeonImagesHandler.getSingleonInstance().setRequestCode(requestCode);
+    public static void collectPhotos(int requestCode, Context activity, LibraryMode libraryMode,
+                                     PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
+        NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
+        NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
+        NeonImagesHandler.getSingletonInstance().setRequestCode(requestCode);
         validate(activity, photosMode,listener);
         List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
         if(alreadyAddedImages != null) {
-            NeonImagesHandler.getSingleonInstance().setImagesCollection(alreadyAddedImages);
+            NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
         }
         if (photosMode.getParams() instanceof INeutralParam) {
             startNeutralActivity(activity, photosMode);
@@ -159,7 +96,8 @@ public class PhotosLibrary{
         }
     }
 
-    public static void collectPhotos(Context activity, LibraryMode libraryMode, PhotosMode photosMode, OnImageCollectionListener listener,LivePhotosListener livePhotosListener) throws NullPointerException, NeonException {
+    public static void collectPhotos(Context activity, LibraryMode libraryMode, PhotosMode photosMode, OnImageCollectionListener listener,
+                                     LivePhotosListener livePhotosListener) throws NullPointerException, NeonException {
         NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
         NeonImagesHandler.getSingletonInstance().setLivePhotosListener(livePhotosListener);
 

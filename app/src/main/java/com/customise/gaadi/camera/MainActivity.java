@@ -28,6 +28,7 @@ import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.PhotoParams;
 
 import java.io.File;
 import java.io.IOError;
@@ -965,6 +966,79 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                                     e.printStackTrace();
 
                                 }
+                            }
+                        }, new ICameraParam() {
+                            @Override
+                            public CameraFacing getCameraFacing() {
+                                return CameraFacing.front;
+                            }
+
+                            @Override
+                            public CameraOrientation getCameraOrientation() {
+                                return CameraOrientation.landscape;
+                            }
+
+                            @Override
+                            public boolean getFlashEnabled() {
+                                return true;
+                            }
+
+                            @Override
+                            public boolean getCameraSwitchingEnabled() {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean getVideoCaptureEnabled() {
+                                return false;
+                            }
+
+                            @Override
+                            public CameraType getCameraViewType() {
+                                return CameraType.normal_camera;
+                            }
+
+                            @Override
+                            public boolean cameraToGallerySwitchEnabled() {
+                                return false;
+                            }
+
+                            @Override
+                            public int getNumberOfPhotos() {
+                                return 0;
+                            }
+
+                            @Override
+                            public boolean getTagEnabled() {
+                                return true;
+                            }
+
+                            @Override
+                            public List<ImageTagModel> getImageTagsModel() {
+                                ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                                for (int i = 0; i < numberOfTags; i++) {
+                                    if (i % 2 == 0) {
+                                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                                    } else {
+                                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
+                                    }
+                                }
+                                return list;
+                            }
+
+                            @Override
+                            public List<FileInfo> getAlreadyAddedImages() {
+                                return null;
+                            }
+
+                            @Override
+                            public boolean enableImageEditing() {
+                                return true;
+                            }
+
+                            @Override
+                            public CustomParameters getCustomParameters() {
+                                return null;
                             }
                         });
                     } catch (NeonException e) {
