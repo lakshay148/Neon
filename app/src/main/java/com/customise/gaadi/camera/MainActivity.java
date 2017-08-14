@@ -933,12 +933,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     try {
 
 
-                        ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
-
-                        for (int i = 0; i < 2; i++) {
-                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1, location));
-                        }
-                        PhotosLibrary.collectLivePhotos(MainActivity.this, list, new OnImageCollectionListener() {
+                        PhotosLibrary.collectLivePhotos(MainActivity.this, new OnImageCollectionListener() {
                             @Override
                             public void imageCollection(NeonResponse neonResponse) {
 
@@ -970,7 +965,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                         }, new ICameraParam() {
                             @Override
                             public CameraFacing getCameraFacing() {
-                                return CameraFacing.front;
+                                return CameraFacing.back;
                             }
 
                             @Override

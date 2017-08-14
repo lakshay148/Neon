@@ -63,7 +63,7 @@ public class PhotosLibrary{
 
 
 
-    public static void collectLivePhotos(final Context activity,final List<ImageTagModel> tagList,
+    public static void collectLivePhotos(final Context activity,
                              final OnImageCollectionListener imageCollectionListener,
                                  final LivePhotosListener listener, ICameraParam iCameraParam) throws NullPointerException, NeonException {
         try {
