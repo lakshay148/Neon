@@ -52,7 +52,6 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.CameraPreview;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.DrawingView;
-import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
@@ -69,13 +68,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimerTask;
 
 @SuppressWarnings("deprecation,unchecked")
 public class CameraFragment1 extends Fragment implements View.OnTouchListener, Camera.PictureCallback {
 
     private static final String TAG = "CameraFragment1";
     private static final int REQUEST_REVIEW = 100;
+    private static final int SHAKE_THRESHOLD = 20;
     public NeonCameraFragmentLayoutBinding binder;
     public Camera mCamera;
     private DrawingView drawingView;
@@ -100,8 +99,48 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private float[] mGravity;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
-    private static final int SHAKE_THRESHOLD = 20;
+    SensorEventListener sensorEventListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                mGravity = event.values.clone();
+                // Shake detection
+                float x = mGravity[0];
+                float y = mGravity[1];
+                float z = mGravity[2];
+
+                long curTime = System.currentTimeMillis();
+
+                if ((curTime - lastUpdate) > 100) {
+                    long diffTime = (curTime - lastUpdate);
+                    lastUpdate = curTime;
+
+                    float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+
+                    if (speed > SHAKE_THRESHOLD) {
+                        handleFocus(null, mCamera.getParameters());
+                    }
+                    Log.e("tag", String.valueOf(speed));
+                    last_x = x;
+                    last_y = y;
+                    last_z = z;
+                }
+
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
     private boolean fromCreate;
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
 
     public void clickPicture() {
         if (readyToTakePicture) {
@@ -159,13 +198,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     public void onClickFragmentsView(View v) {
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
-            if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-                if(FindLocations.getInstance().checkPermissions(mActivity)){
-                    clickPicture();
-                }
-            }
-            else{
+            if (FindLocations.getInstance().checkPermissions(mActivity) &&
+                    FindLocations.getInstance().getLocation() != null) {
                 clickPicture();
+            } else {
+                Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
             }
 
         } else if (v.getId() == R.id.switchCamera) {
@@ -222,7 +259,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             mCamera = null;
             mCameraPreview = null;
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -293,7 +330,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Override
     public void onResume() {
         super.onResume();
-        if(!fromCreate){
+        if (!fromCreate) {
             try {
                 new Handler().post(new Runnable() {
                     @Override
@@ -636,42 +673,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         }
     }
 
-    SensorEventListener sensorEventListener = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                mGravity = event.values.clone();
-                // Shake detection
-                float x = mGravity[0];
-                float y = mGravity[1];
-                float z = mGravity[2];
-
-                long curTime = System.currentTimeMillis();
-
-                if ((curTime - lastUpdate) > 100) {
-                    long diffTime = (curTime - lastUpdate);
-                    lastUpdate = curTime;
-
-                    float speed = Math.abs(x + y + z - last_x - last_y - last_z)/ diffTime * 10000;
-
-                    if (speed > SHAKE_THRESHOLD) {
-                        handleFocus(null, mCamera.getParameters());
-                    }
-                    Log.e("tag",String.valueOf(speed));
-                    last_x = x;
-                    last_y = y;
-                    last_z = z;
-                }
-
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
-
     private int initCameraId() {
         int count = Camera.getNumberOfCameras();
         int result = -1;
@@ -798,8 +799,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         // Notice that width and height are reversed
 
-                        if (bm.getHeight() < bm.getWidth())
-                        {
+                        if (bm.getHeight() < bm.getWidth()) {
                             bm = rotateBitmap(bm, 90);
                         }
 
@@ -879,16 +879,16 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
                 // Modify for live Photos
 
-                    if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
-                        mCameraPreview.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent viewPagerIntent = new Intent(context,ImageReviewActivity.class);
-                                viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
-                                startActivity(viewPagerIntent);
-                            }
-                        },200);
-                    }
+                if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
+                    mCameraPreview.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent viewPagerIntent = new Intent(context, ImageReviewActivity.class);
+                            viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
+                            startActivity(viewPagerIntent);
+                        }
+                    }, 200);
+                }
 
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
 
@@ -902,11 +902,5 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
             readyToTakePicture = true;
         }
-    }
-
-    public static Bitmap rotateBitmap(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }

@@ -294,7 +294,7 @@ public class NeonImagesHandler {
         if (validateNeonExit(null)) {
             sendImageCollectionAndFinish(activity, ResponseCode.Back);
         } else {
-            if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
+            if (NeonImagesHandler.getSingleonInstance().getLibraryMode() == LibraryMode.Restrict) {
                 showExitConfirmation(activity);
             } else {
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
@@ -322,7 +322,6 @@ public class NeonImagesHandler {
 
     public void showBackOperationAlertIfNeededLive(final Activity activity) {
         if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
-            // using in gcloud
             if(!validateNeonExit(null)) {
                 new AlertDialog.Builder(activity).setTitle("Please upload " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
                         .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -335,21 +334,21 @@ public class NeonImagesHandler {
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
         }else{
-            //using in evaluator
+
             if(!validateNeonExit(null)){
                 showExitConfirmation(activity);
-            }else{
-                sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
+
+            showBackOperationAlertIfNeeded(activity);
         }
     }
 
 
     public boolean validateNeonExit(Activity activity) {
-        if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
+        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
             return true;
         }
-        List<FileInfo> fileInfos = NeonImagesHandler.getSingletonInstance().getImagesCollection();
+        List<FileInfo> fileInfos = NeonImagesHandler.getSingleonInstance().getImagesCollection();
         if (fileInfos != null && fileInfos.size() > 0) {
             for (int i = 0; i < fileInfos.size(); i++) {
                 if (fileInfos.get(i).getFileTag() == null) {
@@ -366,7 +365,7 @@ public class NeonImagesHandler {
             if (!imageTagModels.get(j).isMandatory()) {
                 continue;
             }
-            if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
+            if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
                 if (activity != null) {
                     Toast.makeText(activity, imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
                 }

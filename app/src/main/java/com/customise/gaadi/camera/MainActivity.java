@@ -26,6 +26,7 @@ import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.PhotoParams;
@@ -323,10 +324,114 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void livePhotoClick(View view) {
 
-        // For Testing Purpose
-        FindLocations.getInstance().init(this);
 
+        try {
+            PhotosLibrary.collectLivePhotos(LibraryMode.Relax,MainActivity.this, new OnImageCollectionListener() {
+                @Override
+                public void imageCollection(NeonResponse neonResponse) {
 
+                }
+            }, new LivePhotosListener() {
+                @Override
+                public void onLivePhotoCollected(final NeonResponse neonResponse) {
+                    final int index = neonResponse.getImageCollection().size();
+                    Toast.makeText(MainActivity.this, neonResponse.getImageCollection().get(index - 1).getFileTag().getTagName(), Toast.LENGTH_SHORT).show();
+
+                    try {
+                        File file = new File(neonResponse.getImageCollection().get(index - 1).getFilePath());
+                        ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                        String lati = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                        String longi = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                        String datetamp = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_DATESTAMP);
+                        String timestamp = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP);
+                        String dateTime = exifInterfaceHandling.getAttribute(ExifInterface.TAG_DATETIME);
+
+                        Log.i("TTTAG------------", "" + neonResponse.getImageCollection().get(index - 1).getFileTag().getTagName());
+                        Log.i("TTlat------------", "" + lati);
+                        Log.i("TTlong------------", "" + longi);
+                        Log.i("TTtimestamp", "" + dateTime);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+
+                    }
+                }
+            }, new ICameraParam() {
+                @Override
+                public CameraFacing getCameraFacing() {
+                    return CameraFacing.back;
+                }
+
+                @Override
+                public CameraOrientation getCameraOrientation() {
+                    return CameraOrientation.landscape;
+                }
+
+                @Override
+                public boolean getFlashEnabled() {
+                    return true;
+                }
+
+                @Override
+                public boolean getCameraSwitchingEnabled() {
+                    return false;
+                }
+
+                @Override
+                public boolean getVideoCaptureEnabled() {
+                    return false;
+                }
+
+                @Override
+                public CameraType getCameraViewType() {
+                    return CameraType.normal_camera;
+                }
+
+                @Override
+                public boolean cameraToGallerySwitchEnabled() {
+                    return false;
+                }
+
+                @Override
+                public int getNumberOfPhotos() {
+                    return 0;
+                }
+
+                @Override
+                public boolean getTagEnabled() {
+                    return true;
+                }
+
+                @Override
+                public List<ImageTagModel> getImageTagsModel() {
+                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    for (int i = 0; i < numberOfTags; i++) {
+                        if (i % 2 != 0) {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
+                        }
+                    }
+                    return list;
+                }
+
+                @Override
+                public List<FileInfo> getAlreadyAddedImages() {
+                    return null;
+                }
+
+                @Override
+                public boolean enableImageEditing() {
+                    return true;
+                }
+
+                @Override
+                public CustomParameters getCustomParameters() {
+                    return null;
+                }
+            });
+        } catch (NeonException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -933,7 +1038,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     try {
 
 
-                        PhotosLibrary.collectLivePhotos(MainActivity.this, new OnImageCollectionListener() {
+                        PhotosLibrary.collectLivePhotos(LibraryMode.Relax,MainActivity.this, new OnImageCollectionListener() {
                             @Override
                             public void imageCollection(NeonResponse neonResponse) {
 

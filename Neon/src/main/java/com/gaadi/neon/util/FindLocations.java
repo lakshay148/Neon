@@ -38,7 +38,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 public class FindLocations implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener{
 
     private GoogleApiClient mGoogleApiClient;
     private Activity activity;
@@ -46,6 +46,11 @@ public class FindLocations implements
     private long UPDATE_INTERVAL = 6*1000;  /* 6 secs */
     private long FASTEST_INTERVAL = 5*1000; /* 5 secs */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9*1000;
+
+    public Location getLocation() {
+        return location;
+    }
+
     private Location location;
     private ILocation callBack;
     private static FindLocations self;
@@ -116,6 +121,9 @@ public class FindLocations implements
     }
 
     protected void startLocationUpdates() {
+        if(!mGoogleApiClient.isConnected()){
+            return;
+        }
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL);
@@ -252,6 +260,7 @@ public class FindLocations implements
 
     /* Check Location Permission for Marshmallow Devices */
     public boolean checkPermissions(Activity activity) {
+        callBack = (ILocation) activity;
         return checkPermissions(activity,callBack);
     }
     public boolean checkPermissions(Activity activity,ILocation callBack) {

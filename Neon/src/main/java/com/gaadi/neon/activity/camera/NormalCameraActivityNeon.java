@@ -78,8 +78,11 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         bindCameraFragment();
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
-            FindLocations.getInstance().init(this);
         }
+
+        FindLocations.getInstance().init(this);
+        FindLocations.getInstance().checkPermissions(this);
+
     }
 
     private void bindCameraFragment() {
@@ -424,7 +427,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if (binder.imageHolderView.getVisibility() != View.VISIBLE) {
             binder.imageHolderView.setVisibility(View.VISIBLE);
         }
+        updateExifInfo(fileInfo);
         NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
+
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() == null) {
 
             if (NeonImagesHandler.getSingletonInstance().getCameraParam().getCameraViewType() == CameraType.gallery_preview_camera) {
@@ -459,6 +464,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     @Override
     public void getPermissionStatus(Boolean locationPermission) {
         this.locationPermission = locationPermission;
+        FindLocations.getInstance().init(this);
     }
 
     @Override

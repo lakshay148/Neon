@@ -20,6 +20,8 @@ public class FileInfo implements Serializable {
     private int fileCount;
     private String dateTimeTaken;
     private ImageTagModel fileTag;
+    private String latitude;
+    private String longitude;
 
     public FileInfo(String _filePath) {
         filePath = _filePath;
@@ -115,6 +117,22 @@ public class FileInfo implements Serializable {
 
     public void setType(FILE_TYPE type) {
         this.type = type;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public enum FILE_TYPE {IMAGE, FOLDER}
