@@ -294,20 +294,8 @@ public class NeonImagesHandler {
         if (validateNeonExit(null)) {
             sendImageCollectionAndFinish(activity, ResponseCode.Back);
         } else {
-            if (NeonImagesHandler.getSingleonInstance().getLibraryMode() == LibraryMode.Restrict) {
-                new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
-                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        sendImageCollectionAndFinish(activity, ResponseCode.Back);
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+            if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
+                showExitConfirmation(activity);
             } else {
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
@@ -316,8 +304,25 @@ public class NeonImagesHandler {
 
     }
 
+    private void showExitConfirmation(final Activity activity) {
+        new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
+                .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                sendImageCollectionAndFinish(activity, ResponseCode.Back);
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
     public void showBackOperationAlertIfNeededLive(final Activity activity) {
         if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
+            // using in gcloud
             if(!validateNeonExit(null)) {
                 new AlertDialog.Builder(activity).setTitle("Please upload " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
                         .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -329,15 +334,22 @@ public class NeonImagesHandler {
             }else{
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
+        }else{
+            //using in evaluator
+            if(!validateNeonExit(null)){
+                showExitConfirmation(activity);
+            }else{
+                sendImageCollectionAndFinish(activity, ResponseCode.Back);
+            }
         }
     }
 
 
     public boolean validateNeonExit(Activity activity) {
-        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
+        if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
             return true;
         }
-        List<FileInfo> fileInfos = NeonImagesHandler.getSingleonInstance().getImagesCollection();
+        List<FileInfo> fileInfos = NeonImagesHandler.getSingletonInstance().getImagesCollection();
         if (fileInfos != null && fileInfos.size() > 0) {
             for (int i = 0; i < fileInfos.size(); i++) {
                 if (fileInfos.get(i).getFileTag() == null) {
@@ -354,7 +366,7 @@ public class NeonImagesHandler {
             if (!imageTagModels.get(j).isMandatory()) {
                 continue;
             }
-            if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
+            if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
                 if (activity != null) {
                     Toast.makeText(activity, imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
                 }

@@ -50,12 +50,12 @@ public class PhotosLibrary {
     }
 
 
-    public static void collectLivePhotos(final Context activity,
+    public static void collectLivePhotos(LibraryMode libraryMode, final Context activity,
                                          final OnImageCollectionListener imageCollectionListener,
                                          final LivePhotosListener listener, ICameraParam iCameraParam) throws NullPointerException, NeonException {
         try {
 
-            collectPhotos(activity, LibraryMode.Restrict, PhotosMode.setCameraMode().setParams(iCameraParam), imageCollectionListener, listener);
+            collectPhotos(activity, libraryMode, PhotosMode.setCameraMode().setParams(iCameraParam), imageCollectionListener, listener);
 
         } catch (NeonException e) {
             e.printStackTrace();
@@ -138,6 +138,7 @@ public class PhotosLibrary {
         switch (cameraParams.getCameraViewType()) {
 
             case normal_camera:
+            case gallery_preview_camera:
                 Intent intent = new Intent(activity, NormalCameraActivityNeon.class);
                 activity.startActivity(intent);
                 break;

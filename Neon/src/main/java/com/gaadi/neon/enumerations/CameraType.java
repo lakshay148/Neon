@@ -7,5 +7,6 @@ package com.gaadi.neon.enumerations;
  */
 public enum CameraType {
 
-    normal_camera
+    normal_camera,
+    gallery_preview_camera
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
+import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.fragment.CameraFragment1;
@@ -356,9 +357,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             ImageTagModel singleTagModel = tagModels.get(currentTag);
 
             if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
-                if(singleTagModel.isMandatory()) {
+                if (singleTagModel.isMandatory()) {
                     tvNext.setVisibility(View.INVISIBLE);
-                }else{
+                } else {
                     tvNext.setVisibility(View.VISIBLE);
                     tvNext.setText("Skip");
                 }
@@ -425,11 +426,13 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
         NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() == null) {
-            ImageView image = new ImageView(this);
-            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
-            image.setImageBitmap(thumbnail);
-            //image.setImageDrawable(Drawable.createFromPath(filePath));
-            binder.imageHolderView.addView(image);
+
+            if (NeonImagesHandler.getSingletonInstance().getCameraParam().getCameraViewType() == CameraType.gallery_preview_camera) {
+                ImageView image = new ImageView(this);
+                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
+                image.setImageBitmap(thumbnail);
+                binder.imageHolderView.addView(image);
+            }
 
 
             if (cameraParams.getTagEnabled()) {
