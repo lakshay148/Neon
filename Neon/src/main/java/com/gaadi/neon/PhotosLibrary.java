@@ -2,52 +2,42 @@ package com.gaadi.neon;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.widget.Toast;
 
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.GridFoldersActivity;
 import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
-import com.gaadi.neon.enumerations.CameraFacing;
-import com.gaadi.neon.enumerations.CameraOrientation;
-import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
 import com.gaadi.neon.interfaces.LivePhotosListener;
 import com.gaadi.neon.interfaces.OnImageCollectionListener;
-import com.gaadi.neon.model.ImageTagModel;
-import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.model.PhotosMode;
-import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author lakshaygirdhar
  * @since 13-08-2016
  */
-public class PhotosLibrary{
+public class PhotosLibrary {
 
     public static void collectPhotos(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
-        collectPhotos(activity,LibraryMode.Restrict,photosMode,listener);
+        collectPhotos(activity, LibraryMode.Restrict, photosMode, listener);
     }
 
     public static void collectPhotos(Context activity, LibraryMode libraryMode,
                                      PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         NeonImagesHandler.getSingleonInstance().setImageResultListener(listener);
         NeonImagesHandler.getSingleonInstance().setLibraryMode(libraryMode);
-        validate(activity, photosMode,listener);
+        validate(activity, photosMode, listener);
         List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if(alreadyAddedImages != null) {
+        if (alreadyAddedImages != null) {
             NeonImagesHandler.getSingleonInstance().setImagesCollection(alreadyAddedImages);
         }
         if (photosMode.getParams() instanceof INeutralParam) {
@@ -60,15 +50,12 @@ public class PhotosLibrary{
     }
 
 
-
-
-
     public static void collectLivePhotos(final Context activity,
-                             final OnImageCollectionListener imageCollectionListener,
-                                 final LivePhotosListener listener, ICameraParam iCameraParam) throws NullPointerException, NeonException {
+                                         final OnImageCollectionListener imageCollectionListener,
+                                         final LivePhotosListener listener, ICameraParam iCameraParam) throws NullPointerException, NeonException {
         try {
 
-            collectPhotos(activity,LibraryMode.Relax,PhotosMode.setCameraMode().setParams(iCameraParam),imageCollectionListener,listener);
+            collectPhotos(activity, LibraryMode.Restrict, PhotosMode.setCameraMode().setParams(iCameraParam), imageCollectionListener, listener);
 
         } catch (NeonException e) {
             e.printStackTrace();
@@ -76,15 +63,14 @@ public class PhotosLibrary{
     }
 
 
-
     public static void collectPhotos(int requestCode, Context activity, LibraryMode libraryMode,
                                      PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
         NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
         NeonImagesHandler.getSingletonInstance().setRequestCode(requestCode);
-        validate(activity, photosMode,listener);
+        validate(activity, photosMode, listener);
         List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if(alreadyAddedImages != null) {
+        if (alreadyAddedImages != null) {
             NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
         }
         if (photosMode.getParams() instanceof INeutralParam) {
@@ -102,10 +88,10 @@ public class PhotosLibrary{
         NeonImagesHandler.getSingletonInstance().setLivePhotosListener(livePhotosListener);
 
         NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
-        validate(activity, photosMode,listener);
-        validate(activity, photosMode,livePhotosListener);
+        validate(activity, photosMode, listener);
+        validate(activity, photosMode, livePhotosListener);
         List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if(alreadyAddedImages != null) {
+        if (alreadyAddedImages != null) {
             NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
         }
         if (photosMode.getParams() instanceof INeutralParam) {
@@ -118,8 +104,7 @@ public class PhotosLibrary{
     }
 
 
-
-    private static void validate(Context activity, PhotosMode photosMode,OnImageCollectionListener listener) throws NullPointerException, NeonException {
+    private static void validate(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         if (activity == null) {
             throw new NullPointerException("Activity instance cannot be null");
         } else if (photosMode == null) {
@@ -127,13 +112,13 @@ public class PhotosLibrary{
         } else if ((photosMode.getParams().getTagEnabled()) &&
                 (photosMode.getParams().getImageTagsModel() == null || photosMode.getParams().getImageTagsModel().size() <= 0)) {
             throw new NeonException("Tags enabled but list is empty or null");
-        }else if(listener == null){
+        } else if (listener == null) {
             throw new NullPointerException("'OnImageCollectionListener' cannot be null");
         }
     }
 
 
-    private static void validate(Context activity, PhotosMode photosMode,LivePhotosListener listener) throws NullPointerException, NeonException {
+    private static void validate(Context activity, PhotosMode photosMode, LivePhotosListener listener) throws NullPointerException, NeonException {
         if (activity == null) {
             throw new NullPointerException("Activity instance cannot be null");
         } else if (photosMode == null) {
@@ -141,7 +126,7 @@ public class PhotosLibrary{
         } else if ((photosMode.getParams().getTagEnabled()) &&
                 (photosMode.getParams().getImageTagsModel() == null || photosMode.getParams().getImageTagsModel().size() <= 0)) {
             throw new NeonException("Tags enabled but list is empty or null");
-        }else if(listener == null){
+        } else if (listener == null) {
             throw new NullPointerException("'OnImageCollectionListener' cannot be null");
         }
     }
@@ -168,9 +153,9 @@ public class PhotosLibrary{
 
             case Grid_Structure:
                 Intent gridGalleryIntent;
-                if(galleryParams.enableFolderStructure()){
+                if (galleryParams.enableFolderStructure()) {
                     gridGalleryIntent = new Intent(activity, GridFoldersActivity.class);
-                }else{
+                } else {
                     gridGalleryIntent = new Intent(activity, GridFilesActivity.class);
                 }
                 activity.startActivity(gridGalleryIntent);
@@ -178,9 +163,9 @@ public class PhotosLibrary{
 
             case Horizontal_Structure:
                 Intent horizontalGalleryIntent;
-                if(galleryParams.enableFolderStructure()){
+                if (galleryParams.enableFolderStructure()) {
                     horizontalGalleryIntent = new Intent(activity, GridFoldersActivity.class);
-                }else{
+                } else {
                     horizontalGalleryIntent = new Intent(activity, HorizontalFilesActivity.class);
                 }
                 activity.startActivity(horizontalGalleryIntent);

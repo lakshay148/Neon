@@ -33,8 +33,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
         <activity
-            android:name="com.gaadi.neon.activity.ImageReviewActivity"
-            android:screenOrientation="portrait" />
+            android:name="com.gaadi.neon.activity.ImageReviewActivity"/>
         <activity
             android:name="com.gaadi.neon.activity.neutral.NeonNeutralActivity"
             android:screenOrientation="portrait" />

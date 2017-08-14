@@ -3,13 +3,11 @@ package com.gaadi.neon.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.enumerations.ResponseCode;
-import com.gaadi.neon.fragment.ImageShowFragment;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
@@ -42,7 +40,7 @@ public class NeonImagesHandler {
     private OnImageCollectionListener imageResultListener;
     private LivePhotosListener livePhotosListener;
     private LivePhotoNextTagListener livePhotoNextTagListener;
-    private String currentTag="";
+    private String currentTag = "";
 
     private LibraryMode libraryMode;
     private int requestCode;
@@ -319,15 +317,15 @@ public class NeonImagesHandler {
     }
 
     public void showBackOperationAlertIfNeededLive(final Activity activity) {
-            if(NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
-                new AlertDialog.Builder(activity).setTitle("Please upload "+NeonImagesHandler.getSingletonInstance().getCurrentTag()+" Photo")
-                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
+        if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
+            new AlertDialog.Builder(activity).setTitle("Please upload " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
+                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+        }
     }
 
 
