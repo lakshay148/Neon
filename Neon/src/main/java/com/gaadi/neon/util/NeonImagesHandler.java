@@ -318,13 +318,17 @@ public class NeonImagesHandler {
 
     public void showBackOperationAlertIfNeededLive(final Activity activity) {
         if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
-            new AlertDialog.Builder(activity).setTitle("Please upload " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
-                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
+            if(!validateNeonExit(null)) {
+                new AlertDialog.Builder(activity).setTitle("Please upload " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
+                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }else{
+                sendImageCollectionAndFinish(activity, ResponseCode.Back);
+            }
         }
     }
 

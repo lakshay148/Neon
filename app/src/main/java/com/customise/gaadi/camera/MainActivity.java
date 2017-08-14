@@ -1012,7 +1012,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                             public List<ImageTagModel> getImageTagsModel() {
                                 ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
                                 for (int i = 0; i < numberOfTags; i++) {
-                                    if (i % 2 == 0) {
+                                    if (i % 2 != 0) {
                                         list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
                                     } else {
                                         list.add(new ImageTagModel("Tag" + i, String.valueOf(i), false, 1));
