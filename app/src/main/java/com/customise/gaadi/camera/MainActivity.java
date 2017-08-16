@@ -8,13 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.enumerations.LibraryMode;
-import com.gaadi.neon.enumerations.ResponseCode;
-import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
 import com.gaadi.neon.interfaces.INeutralParam;
@@ -29,20 +28,18 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
-import com.gaadi.neon.util.PhotoParams;
 
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnImageCollectionListener, FindLocations.ILocation {
 
     private static final String TAG = "MainActivity";
-    private int numberOfTags = 5;
     List<FileInfo> allreadyImages;
+    private int numberOfTags = 5;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +47,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
         setContentView(R.layout.activity_main);
     }
 
-
     public void cameraPriorityClicked(View view) {
         try {
 
-            PhotosLibrary.collectPhotos(this, LibraryMode.Relax, PhotosMode.setCameraMode().setParams(new ICameraParam() {
+            PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.back;
@@ -136,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void cameraOnlyClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
+            PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.front;
@@ -218,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void neutralClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, LibraryMode.Relax, PhotosMode.setNeutralMode().setParams(new INeutralParam() {
+            PhotosLibrary.collectPhotos(1, this, LibraryMode.Relax, PhotosMode.setNeutralMode().setParams(new INeutralParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
                     return CameraFacing.front;
@@ -326,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
 
         try {
-            PhotosLibrary.collectLivePhotos(LibraryMode.Relax,MainActivity.this, new OnImageCollectionListener() {
+            PhotosLibrary.collectLivePhotos(1, LibraryMode.Relax, MainActivity.this, new OnImageCollectionListener() {
                 @Override
                 public void imageCollection(NeonResponse neonResponse) {
 
@@ -434,10 +430,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
         }
     }
 
-
     public void gridOnlyFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -508,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void gridPriorityFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -579,7 +574,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void gridOnlyFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -650,7 +645,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void gridPriorityFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, LibraryMode.Relax, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -719,10 +714,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
         }
     }
 
-
     public void horizontalOnlyFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, LibraryMode.Relax, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -793,7 +787,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void horizontalPriorityFolderClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, LibraryMode.Relax, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -864,7 +858,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void horizontalOnlyFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, LibraryMode.Relax, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -935,7 +929,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     public void horizontalPrioriyFilesClicked(View view) {
         try {
-            PhotosLibrary.collectPhotos(this, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+            PhotosLibrary.collectPhotos(1, this, LibraryMode.Relax, PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                 @Override
                 public boolean selectVideos() {
                     return false;
@@ -1004,7 +998,6 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
         }
     }
 
-
     @Override
     public void imageCollection(NeonResponse neonResponse) {
         if (neonResponse.getImageCollection() != null && neonResponse.getImageCollection().size() > 0) {
@@ -1017,8 +1010,6 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
     public void getAddress(String locationAddress) {
 
     }
-
-    private Location location;
 
     @Override
     public void getLocation(Location location) {
@@ -1038,7 +1029,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     try {
 
 
-                        PhotosLibrary.collectLivePhotos(LibraryMode.Relax,MainActivity.this, new OnImageCollectionListener() {
+                        PhotosLibrary.collectLivePhotos(1, LibraryMode.Relax, MainActivity.this, new OnImageCollectionListener() {
                             @Override
                             public void imageCollection(NeonResponse neonResponse) {
 

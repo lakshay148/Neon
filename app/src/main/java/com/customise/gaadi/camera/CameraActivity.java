@@ -52,7 +52,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    PhotosLibrary.collectPhotos(CameraActivity.this,NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
+                    PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(),CameraActivity.this,NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(new IGalleryParam() {
                         @Override
                         public boolean selectVideos() {
                             return false;
@@ -132,7 +132,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    PhotosLibrary.collectPhotos(CameraActivity.this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), new OnImageCollectionListener() {
+                    PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(),CameraActivity.this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), new OnImageCollectionListener() {
                         @Override
                         public void imageCollection(NeonResponse neonResponse) {
                             if (totalList == null) {
