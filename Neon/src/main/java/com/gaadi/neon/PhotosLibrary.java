@@ -2,6 +2,7 @@ package com.gaadi.neon;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
@@ -139,6 +140,10 @@ public class PhotosLibrary {
 
     private static void startCameraActivity(Context activity, PhotosMode photosMode) {
         ICameraParam cameraParams = (ICameraParam) photosMode.getParams();
+        if(cameraParams == null){
+            Toast.makeText(activity,"Camera param null",Toast.LENGTH_SHORT).show();
+            return;
+        }
         NeonImagesHandler.getSingletonInstance().setCameraParam(cameraParams);
 
         switch (cameraParams.getCameraViewType()) {
@@ -154,7 +159,11 @@ public class PhotosLibrary {
 
     private static void startGalleryActivity(Context activity, PhotosMode photosMode) {
         IGalleryParam galleryParams = (IGalleryParam) photosMode.getParams();
-        NeonImagesHandler.getSingleonInstance().setGalleryParam(galleryParams);
+        if(galleryParams == null){
+            Toast.makeText(activity,"Gallery param null",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        NeonImagesHandler.getSingletonInstance().setGalleryParam(galleryParams);
 
         switch (galleryParams.getGalleryViewType()) {
 
@@ -185,6 +194,10 @@ public class PhotosLibrary {
         NeonImagesHandler.getSingletonInstance().setNeutralEnabled(true);
 
         INeutralParam neutralParamParams = (INeutralParam) photosMode.getParams();
+        if(neutralParamParams == null){
+            Toast.makeText(activity,"Neutral param null",Toast.LENGTH_SHORT).show();
+            return;
+        }
         NeonImagesHandler.getSingletonInstance().setNeutralParam(neutralParamParams);
 
         Intent neutralIntent = new Intent(activity, NeonNeutralActivity.class);

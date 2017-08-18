@@ -50,13 +50,18 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 NeonImagesHandler.getSingletonInstance().getImagesCollection().size() <= 0) {
             setTitle(R.string.photos);
             binder.tabList.setVisibility(View.VISIBLE);
-            binder.imageShowFragmentContainer.setVisibility(View.GONE);
+            //binder.imageShowFragmentContainer.setVisibility(View.GONE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
                 if (tagModels == null || tagModels.size() <= 0) {
                     return;
                 }
                 tagModels = getMandetoryTags(tagModels);
+                if(tagModels == null || tagModels.size() <=0){
+                    binder.txtTagTitle.setVisibility(View.GONE);
+                }else{
+                    binder.txtTagTitle.setVisibility(View.VISIBLE);
+                }
                 String[] tags = new String[tagModels.size()];
                 for (int i = 0; i < tagModels.size(); i++) {
                     tags[i] = "* " + tagModels.get(i).getTagName();
@@ -64,7 +69,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 }
                 adapter = new ArrayAdapter<>(this, R.layout.single_textview, R.id.tagText, tags);
             }
-            binder.txtTagTitle.setVisibility(View.VISIBLE);
+            //binder.txtTagTitle.setVisibility(View.VISIBLE);
             binder.tabList.setAdapter(adapter);
         } else {
             binder.tabList.setVisibility(View.GONE);

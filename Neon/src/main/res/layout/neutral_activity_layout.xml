@@ -80,6 +80,16 @@
                 android:contentDescription="@string/emptyString"
                 android:paddingBottom="5dp" />
 
+            <ListView
+                android:layout_below="@+id/txtTagTitle"
+                android:id="@+id/tabList"
+                android:dividerHeight="0dp"
+                android:divider="@null"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
 
             <FrameLayout
                 android:orientation="vertical"
@@ -98,14 +108,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <ListView
-                android:layout_below="@+id/txtTagTitle"
-                android:id="@+id/tabList"
-                android:dividerHeight="0dp"
-                android:divider="@null"
-                android:layout_margin="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
 
 
         </RelativeLayout>
