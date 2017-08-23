@@ -85,7 +85,7 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
         getMenuInflater().inflate(R.menu.menu_done_file, menu);
         textViewDone = menu.findItem(R.id.menu_next);
         menuItemCamera = menu.findItem(R.id.menuCamera);
-        menuItemCamera.setVisible(NeonImagesHandler.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
+        menuItemCamera.setVisible(NeonImagesHandler.getSingletonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
         textViewDone.setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
@@ -97,12 +97,12 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
             onBackPressed();
             return true;
         } else if (id == R.id.menu_next) {
-            if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
-                    NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) {
+            if (NeonImagesHandler.getSingletonInstance().getImagesCollection() == null ||
+                    NeonImagesHandler.getSingletonInstance().getImagesCollection().size() <= 0) {
                 Toast.makeText(this, R.string.no_image_selected, Toast.LENGTH_SHORT).show();
                 return super.onOptionsItemSelected(item);
             } else {
-                if (!NeonImagesHandler.getSingleonInstance().isNeutralEnabled()) {
+                if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
                     if(NeonImagesHandler.getSingletonInstance().getGalleryParam().enableImageEditing()
                             || NeonImagesHandler.getSingletonInstance().getGalleryParam().getTagEnabled()) {
                         Intent intent = new Intent(this, ImageShow.class);

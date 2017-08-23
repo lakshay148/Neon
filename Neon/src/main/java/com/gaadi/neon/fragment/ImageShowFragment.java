@@ -87,18 +87,14 @@ public class ImageShowFragment extends Fragment  {
             }
         });
 
-
-
-
-
         return binder.getRoot();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
-                NeonImagesHandler.getSingleonInstance().getImagesCollection().size() < 0) {
+        if (NeonImagesHandler.getSingletonInstance().getImagesCollection() == null ||
+                NeonImagesHandler.getSingletonInstance().getImagesCollection().size() < 0) {
             return;
         }
         adapter = new ImageShowAdapter(getActivity());
