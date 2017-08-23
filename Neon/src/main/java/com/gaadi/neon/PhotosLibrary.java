@@ -28,29 +28,6 @@ import java.util.List;
  */
 public class PhotosLibrary {
 
-   /* public static void collectPhotos(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
-        collectPhotos(activity, LibraryMode.Restrict, photosMode, listener);
-    }*/
-
- /*   public static void collectPhotos(Context activity, LibraryMode libraryMode,
-                                     PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
-        NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
-        NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
-        validate(activity, photosMode, listener);
-        List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if (alreadyAddedImages != null) {
-            NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
-        }
-        if (photosMode.getParams() instanceof INeutralParam) {
-            startNeutralActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof ICameraParam) {
-            startCameraActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof IGalleryParam) {
-            startGalleryActivity(activity, photosMode);
-        }
-    }
-*/
-
     public static void collectLivePhotos(int requestCode, LibraryMode libraryMode, final Context activity,
                                          final OnImageCollectionListener imageCollectionListener,
                                          final LivePhotosListener livePhotosListener, ICameraParam iCameraParam) throws NullPointerException, NeonException {
@@ -87,29 +64,6 @@ public class PhotosLibrary {
         }
     }
 
-  /*  private static void collectPhotos(Context activity, LibraryMode libraryMode, PhotosMode photosMode,
-                                     OnImageCollectionListener listener,
-                                     LivePhotosListener livePhotosListener) throws NullPointerException, NeonException {
-        NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
-        NeonImagesHandler.getSingletonInstance().setLivePhotosListener(livePhotosListener);
-        NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
-        validate(activity, photosMode, listener);
-        if(livePhotosListener == null){
-            throw new NullPointerException("'LivePhotosListener' cannot be null");
-        }
-        List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if (alreadyAddedImages != null) {
-            NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
-        }
-        if (photosMode.getParams() instanceof INeutralParam) {
-            startNeutralActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof ICameraParam) {
-            startCameraActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof IGalleryParam) {
-            startGalleryActivity(activity, photosMode);
-        }
-    }
-*/
 
     private static void validate(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         if (activity == null) {
@@ -123,20 +77,6 @@ public class PhotosLibrary {
             throw new NullPointerException("'OnImageCollectionListener' cannot be null");
         }
     }
-
-
-    /*private static void validate(Context activity, PhotosMode photosMode, LivePhotosListener listener) throws NullPointerException, NeonException {
-        if (activity == null) {
-            throw new NullPointerException("Activity instance cannot be null");
-        } else if (photosMode == null) {
-            throw new NullPointerException("PhotosMode instance cannot be null");
-        } else if ((photosMode.getParams().getTagEnabled()) &&
-                (photosMode.getParams().getImageTagsModel() == null || photosMode.getParams().getImageTagsModel().size() <= 0)) {
-            throw new NeonException("Tags enabled but list is empty or null");
-        } else if (listener == null) {
-            throw new NullPointerException("'OnImageCollectionListener' cannot be null");
-        }
-    }*/
 
     private static void startCameraActivity(Context activity, PhotosMode photosMode) {
         ICameraParam cameraParams = (ICameraParam) photosMode.getParams();
