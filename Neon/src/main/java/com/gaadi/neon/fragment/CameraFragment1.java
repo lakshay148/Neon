@@ -852,9 +852,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
 
-            if (mCamera != null) {
+          /*  if (mCamera != null) {
                 mCamera.startPreview();
-            }
+            }*/
             return pictureFile;
         }
 
@@ -896,11 +896,13 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
                 //readyToTakePicture = true;
-                if (mCamera != null) {
-                    mCamera.startPreview();
-                }
+
             }
+
             readyToTakePicture = true;
+            if (mCamera != null) {
+                mCamera.startPreview();
+            }
         }
     }
 }
