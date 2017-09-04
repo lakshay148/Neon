@@ -42,8 +42,12 @@ public class Constants {
     public static String FLAG = "Flag";
 
     public static File getMediaOutputFile(Context context, int type) {
+        String appName = context.getString(R.string.app_name);
+        if (appName.length() > 0) {
+            appName = appName.replace(" ", "");
+        }
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), context.getString(R.string.app_name));
+                Environment.DIRECTORY_PICTURES), appName);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
