@@ -56,7 +56,7 @@ public class Constants {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
         File mediaFile;
 
         if (type == TYPE_IMAGE) {
