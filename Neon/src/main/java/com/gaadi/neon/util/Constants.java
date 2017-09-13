@@ -57,7 +57,9 @@ public class Constants {
 
         if (type == TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_" + timeStamp + ".jpg");
+                     System.currentTimeMillis() + ".jpg");
+           /* mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "IMG_" + System.currentTimeMillis() + ".jpg");*/
         } else
             return null;
         return mediaFile;
