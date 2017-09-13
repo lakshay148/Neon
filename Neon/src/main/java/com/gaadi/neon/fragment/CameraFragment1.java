@@ -117,7 +117,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
                     float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
 
-                    if (speed > SHAKE_THRESHOLD) {
+                    if (speed > SHAKE_THRESHOLD && mCamera!=null && mCamera.getParameters()!=null) {
                         handleFocus(null, mCamera.getParameters());
                     }
                     Log.e("tag", String.valueOf(speed));
@@ -852,9 +852,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
 
-            if (mCamera != null) {
+          /*  if (mCamera != null) {
                 mCamera.startPreview();
-            }
+            }*/
             return pictureFile;
         }
 
@@ -880,14 +880,14 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 // Modify for live Photos
 
                 if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
-                    mCameraPreview.postDelayed(new Runnable() {
+                    new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             Intent viewPagerIntent = new Intent(context, ImageReviewActivity.class);
                             viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
                             startActivity(viewPagerIntent);
                         }
-                    }, 200);
+                    },200);
                 }
 
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
@@ -896,11 +896,13 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
                 //readyToTakePicture = true;
-                if (mCamera != null) {
-                    mCamera.startPreview();
-                }
+
             }
+
             readyToTakePicture = true;
+            if (mCamera != null) {
+                mCamera.startPreview();
+            }
         }
     }
 }

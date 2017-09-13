@@ -18,48 +18,67 @@
         android:theme="@style/NeonAppCompatNoActionBarTheme">
         <activity
             android:name="com.gaadi.neon.activity.CameraActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
         <activity
             android:name="com.gaadi.neon.activity.camera.NormalCameraActivityNeon"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
         <activity
             android:name="com.gaadi.neon.activity.CameraActivity1"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
         <activity
             android:name="com.gaadi.neon.activity.GalleryActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
         <activity
-            android:name="com.gaadi.neon.activity.ImageReviewActivity"/>
+            android:name="com.gaadi.neon.activity.ImageReviewActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name="com.gaadi.neon.activity.neutral.NeonNeutralActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaadi.neon.activity.GalleryFiles"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
         <activity
             android:name="com.gaadi.neon.activity.LNeutralActivity"
             android:label="@string/title_activity_neutral"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
         <activity
             android:name="com.gaadi.neon.activity.ReviewImageActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/NeonAppCompatNoActionBarTheme" />
-        <activity android:name="com.gaadi.neon.activity.gallery.GridFoldersActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.gaadi.neon.activity.gallery.GridFilesActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.gaadi.neon.activity.ImageShow"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.gaadi.neon.activity.gallery.HorizontalFilesActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.gaadi.neon.activity.gallery.GridFoldersActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaadi.neon.activity.gallery.GridFilesActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaadi.neon.activity.ImageShow"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaadi.neon.activity.gallery.HorizontalFilesActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
     </application>
 

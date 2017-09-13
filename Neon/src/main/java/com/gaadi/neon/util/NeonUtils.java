@@ -426,7 +426,7 @@ public class NeonUtils {
 
     public static File getEmptyStoragePath(Context ctx) {
         File mediaFile = null;
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
         String selectedPath = null;
         ArrayList<String> list = (ArrayList) getSdCardPaths(ctx, true);
         for (String path : list) {

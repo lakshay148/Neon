@@ -47,7 +47,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
 
         MenuItem textViewDone = menu.findItem(R.id.menu_next);
         MenuItem textViewCamera = menu.findItem(R.id.menuCamera);
-        if (NeonImagesHandler.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled()) {
+        if (NeonImagesHandler.getSingletonInstance().getGalleryParam().galleryToCameraSwitchEnabled()) {
             textViewCamera.setVisible(true);
         } else {
             textViewCamera.setVisible(false);
@@ -174,7 +174,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
             };
         }
         try {
-            PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(),this,NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+            PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(),this,NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
         } catch (NeonException e) {
             e.printStackTrace();
         }

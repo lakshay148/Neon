@@ -28,32 +28,10 @@ import java.util.List;
  */
 public class PhotosLibrary {
 
-   /* public static void collectPhotos(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
-        collectPhotos(activity, LibraryMode.Restrict, photosMode, listener);
-    }*/
-
- /*   public static void collectPhotos(Context activity, LibraryMode libraryMode,
-                                     PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
-        NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
-        NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
-        validate(activity, photosMode, listener);
-        List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if (alreadyAddedImages != null) {
-            NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
-        }
-        if (photosMode.getParams() instanceof INeutralParam) {
-            startNeutralActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof ICameraParam) {
-            startCameraActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof IGalleryParam) {
-            startGalleryActivity(activity, photosMode);
-        }
-    }
-*/
-
     public static void collectLivePhotos(int requestCode, LibraryMode libraryMode, final Context activity,
                                          final OnImageCollectionListener imageCollectionListener,
-                                         final LivePhotosListener livePhotosListener, ICameraParam iCameraParam) throws NullPointerException, NeonException {
+                                         final LivePhotosListener livePhotosListener, ICameraParam iCameraParam)
+            throws NullPointerException, NeonException {
         try {
             if (livePhotosListener == null) {
                 throw new NullPointerException("'LivePhotosListener' cannot be null");
@@ -69,7 +47,8 @@ public class PhotosLibrary {
 
 
     public static void collectPhotos(int requestCode, Context activity, LibraryMode libraryMode,
-                                     PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
+                                     PhotosMode photosMode, OnImageCollectionListener listener)
+            throws NullPointerException, NeonException {
         NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
         NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
         NeonImagesHandler.getSingletonInstance().setRequestCode(requestCode);
@@ -87,29 +66,6 @@ public class PhotosLibrary {
         }
     }
 
-  /*  private static void collectPhotos(Context activity, LibraryMode libraryMode, PhotosMode photosMode,
-                                     OnImageCollectionListener listener,
-                                     LivePhotosListener livePhotosListener) throws NullPointerException, NeonException {
-        NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
-        NeonImagesHandler.getSingletonInstance().setLivePhotosListener(livePhotosListener);
-        NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
-        validate(activity, photosMode, listener);
-        if(livePhotosListener == null){
-            throw new NullPointerException("'LivePhotosListener' cannot be null");
-        }
-        List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if (alreadyAddedImages != null) {
-            NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
-        }
-        if (photosMode.getParams() instanceof INeutralParam) {
-            startNeutralActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof ICameraParam) {
-            startCameraActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof IGalleryParam) {
-            startGalleryActivity(activity, photosMode);
-        }
-    }
-*/
 
     private static void validate(Context activity, PhotosMode photosMode, OnImageCollectionListener listener) throws NullPointerException, NeonException {
         if (activity == null) {
@@ -124,24 +80,10 @@ public class PhotosLibrary {
         }
     }
 
-
-    /*private static void validate(Context activity, PhotosMode photosMode, LivePhotosListener listener) throws NullPointerException, NeonException {
-        if (activity == null) {
-            throw new NullPointerException("Activity instance cannot be null");
-        } else if (photosMode == null) {
-            throw new NullPointerException("PhotosMode instance cannot be null");
-        } else if ((photosMode.getParams().getTagEnabled()) &&
-                (photosMode.getParams().getImageTagsModel() == null || photosMode.getParams().getImageTagsModel().size() <= 0)) {
-            throw new NeonException("Tags enabled but list is empty or null");
-        } else if (listener == null) {
-            throw new NullPointerException("'OnImageCollectionListener' cannot be null");
-        }
-    }*/
-
     private static void startCameraActivity(Context activity, PhotosMode photosMode) {
         ICameraParam cameraParams = (ICameraParam) photosMode.getParams();
-        if(cameraParams == null){
-            Toast.makeText(activity,"Camera param null",Toast.LENGTH_SHORT).show();
+        if (cameraParams == null) {
+            Toast.makeText(activity, "Camera param null", Toast.LENGTH_SHORT).show();
             return;
         }
         NeonImagesHandler.getSingletonInstance().setCameraParam(cameraParams);
@@ -159,8 +101,8 @@ public class PhotosLibrary {
 
     private static void startGalleryActivity(Context activity, PhotosMode photosMode) {
         IGalleryParam galleryParams = (IGalleryParam) photosMode.getParams();
-        if(galleryParams == null){
-            Toast.makeText(activity,"Gallery param null",Toast.LENGTH_SHORT).show();
+        if (galleryParams == null) {
+            Toast.makeText(activity, "Gallery param null", Toast.LENGTH_SHORT).show();
             return;
         }
         NeonImagesHandler.getSingletonInstance().setGalleryParam(galleryParams);
@@ -194,8 +136,8 @@ public class PhotosLibrary {
         NeonImagesHandler.getSingletonInstance().setNeutralEnabled(true);
 
         INeutralParam neutralParamParams = (INeutralParam) photosMode.getParams();
-        if(neutralParamParams == null){
-            Toast.makeText(activity,"Neutral param null",Toast.LENGTH_SHORT).show();
+        if (neutralParamParams == null) {
+            Toast.makeText(activity, "Neutral param null", Toast.LENGTH_SHORT).show();
             return;
         }
         NeonImagesHandler.getSingletonInstance().setNeutralParam(neutralParamParams);

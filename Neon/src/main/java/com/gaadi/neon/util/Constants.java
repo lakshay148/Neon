@@ -42,8 +42,12 @@ public class Constants {
     public static String FLAG = "Flag";
 
     public static File getMediaOutputFile(Context context, int type) {
+        String appName = context.getString(R.string.app_name);
+        if (appName.length() > 0) {
+            appName = appName.replace(" ", "");
+        }
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), context.getString(R.string.app_name));
+                Environment.DIRECTORY_PICTURES), appName);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -52,7 +56,7 @@ public class Constants {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
         File mediaFile;
 
         if (type == TYPE_IMAGE) {

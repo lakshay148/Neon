@@ -41,7 +41,6 @@ public class NeonImagesHandler {
     private LivePhotosListener livePhotosListener;
     private LivePhotoNextTagListener livePhotoNextTagListener;
     private String currentTag = "";
-
     private LibraryMode libraryMode;
     private int requestCode;
 
@@ -392,4 +391,5 @@ public class NeonImagesHandler {
     public void setRequestCode(int requestCode) {
         this.requestCode = requestCode;
     }
+
 }
